@@ -7,7 +7,7 @@ public class Server_Tetst {
         int port = 8080; // случайный порт (может быть любое число от 1025 до 65535)
         try {
             ServerSocket ss = new ServerSocket(port); // создаем сокет сервера и привязываем его к вышеуказанному порту
-            System.out.println(" \u0061");
+            System.out.println("готов port"+ port);
 
             Socket socket = ss.accept();
             new Thread(new Worker(socket)).start();
