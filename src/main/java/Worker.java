@@ -21,13 +21,13 @@ public class Worker implements Runnable {
             DataOutputStream out = new DataOutputStream(output);
             String line = null;
             while(!isStopped) {
-
-                System.out.println("жду 1 поток :\n");
+                System.out.println(clientSocket);
+                System.out.println("wait 1 поток :\n");
                 line = in.readUTF(); // ожидаем пока клиент пришлет строку текста.
                 //int i = input.read();
 
                 //input.read();
-                System.out.println("принял 1 поток  : " + line);
+                System.out.println("thred 1 поток  : " + line);
 
                 out.writeUTF("qqqq "+line);
                 out.flush(); // заставляем поток закончить передачу данных.
