@@ -13,15 +13,10 @@ public class Server_Tetst {
 
             String ip = inn.readLine(); //you get the IP as a String
             System.out.println(ip);
-
-            while (true) {
-
-
             System.out.println("готов port" + port);
 
             ServerSocket ss = new ServerSocket(port); // создаем сокет сервера и привязываем его к вышеуказанному порту
-
-
+            while (true) {   
             Socket socket = ss.accept();
             new Thread(new Worker(socket)).start();
 
