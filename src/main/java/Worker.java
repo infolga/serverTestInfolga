@@ -4,7 +4,7 @@ import java.net.Socket;
 
 public class Worker implements Runnable {
     private boolean isStopped=false;
-    protected Socket clientSocket = null;
+    private Socket clientSocket = null;
 
     public Worker(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -19,11 +19,12 @@ public class Worker implements Runnable {
 
             DataInputStream in = new DataInputStream(input);
             DataOutputStream out = new DataOutputStream(output);
-            String line = null;
+            String line ;
             while(!isStopped) {
                 System.out.println(clientSocket);
-                System.out.println("wait 1 поток :\n");
+
                 line = in.readUTF(); // ожидаем пока клиент пришлет строку текста.
+                System.out.println("wait 1 поток :\n");
                 //int i = input.read();
 
                 //input.read();
