@@ -30,7 +30,7 @@ public class Worker implements Runnable {
                 //input.read();
                 System.out.println("thred 1 поток  : " + line);
 
-                out.writeUTF("qqqq "+line);
+                out.writeUTF("yyyy "+line);
                 out.flush(); // заставляем поток закончить передачу данных.
 
                 System.out.println();
