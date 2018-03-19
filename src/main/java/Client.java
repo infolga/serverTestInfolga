@@ -14,7 +14,7 @@ public class Client {
         String ip = inn.readLine(); //you get the IP as a String
         System.out.println(ip);
         try {
-            //InetAddress ipAddress = InetAddress.getByName(new URL(address).getHost());
+            //InetAddress ipAddress = InetAddreФss.getByName(new URL(address).getHost());
          InetAddress ipAddress = InetAddress.getByName( address );
             System.out.println(" готов к работе ");
             System.out.println(ipAddress.getHostAddress());
@@ -31,13 +31,16 @@ public class Client {
 
             // Создаем поток для чтения с клавиатуры.
             BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-            String line = null;
+            String line ;
             System.out.println("готов ");
             System.out.println();
 
             while (true) {
                 line = keyboard.readLine(); // ждем пока пользователь введет что-то и нажмет кнопку Enter.
                 System.out.println("отправляю");
+                if( line.equals( "end")){
+                    break;
+                }
                 out.writeUTF(line); // отсылаем введенную строку текста серверу.
                 out.flush(); // заставляем поток закончить передачу данных.
                 // ждем пока сервер отошлет строку текста.
