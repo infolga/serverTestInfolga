@@ -84,5 +84,9 @@
     <orderEntry type="library" name="Maven: org.slf4j:slf4j-simple:1.7.12" level="project" />
     <orderEntry type="library" name="Maven: com.fasterxml:aalto-xml:1.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.woodstox:stax2-api:4.0.0" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport-native-epoll:4.0.40.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-common:4.0.40.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-buffer:4.0.40.Final" level="project" />
+    <orderEntry type="library" name="Maven: io.netty:netty-transport:4.0.40.Final" level="project" />
   </component>
 </module>
