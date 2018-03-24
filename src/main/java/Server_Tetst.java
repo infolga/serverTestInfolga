@@ -46,7 +46,9 @@ public class Server_Tetst {
 
                         }
                     });
+
             ChannelFuture f = b.bind(port).sync();
+            System.out.println("ready");
             f.channel().closeFuture().sync();
         } catch (InterruptedException e) {
             e.printStackTrace();
