@@ -12,38 +12,12 @@ public class DecodeToTask extends SimpleChannelInboundHandler  {
         Log.info("msg   "+msg.toString());
        // Log.info(" "+(int)msg.toString().charAt(1));
         System.out.println("channelRead0");
-        String s      = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
-            "<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n" +
-            "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
-            "         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
-            "    <modelVersion>4.0.0</modelVersion>\n" +
-            "\n" +
-            "    <groupId>123</groupId>\n" +
-            "    <artifactId>345</artifactId>\n" +
-            "    <version>1.0-SNAPSHOT</version>\n" +
-            "    <build>\n" +
-            "        <plugins>\n" +
-            "            <plugin>\n" +
-            "                <groupId>org.apache.maven.plugins</groupId>\n" +
-            "                <artifactId>maven-compiler-plugin</artifactId>\n" +
-            "                <configuration>\n" +
-            "                    <source>1.6</source>\n" +
-            "                    <target>1.6</target>\n" +
-            "                </configuration>\n" +
-            "            </plugin>\n" +
-            "        </plugins>\n" +
-            "    </build>\n" +
-            "\n" +
-            "    <dependencies>\n" +
-            "\n" +
-            "        <dependency>\n" +
-            "            <groupId>io.netty</groupId>\n" +
-            "            <artifactId>netty-all</artifactId> <!-- Use 'netty-all' for 4.0 or above -->\n" +
-            "            <version>4.1.16.Final</version>\n" +
-            "            <scope>compile</scope>\n" +
-            "        </dependency>\n" +
-            "    </dependencies>\n" +
-            "</project>";
+        String s      =  "15.01.2018 22:05:10\tРазряжается\t87.7%\t31 820\t-3280\t11 699\tТаймер\t\n" +
+            "15.01.2018 22:05:40\tРазряжается\t87.6%\t31 790\t-3220\t11 703\tТаймер\t\n" +
+            "15.01.2018 22:06:10\tРазряжается\t87.5%\t31 750\t-3310\t11 669\tТаймер\t\n" +
+            "15.01.2018 22:06:40\tРазряжается\t87.4%\t31 720\t-3270\t11 693\tТаймер\t\n" +
+            "15.01.2018 22:07:10\tРазряжается\t87.3%\t31 690\t-3260\t11 693\tТаймер\t\n" +
+            "15.01.2018 22:07:40\tРазряжается\t87.2%\t31 660\t-3260\t11 652\tТаймер\t";
 
         ctx.write(s);
             ctx.flush();
