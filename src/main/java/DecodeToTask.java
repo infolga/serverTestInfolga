@@ -11,7 +11,7 @@ public class DecodeToTask extends SimpleChannelInboundHandler  {
        // Log.info("channelRead0"+ctx.toString());
         Log.info("msg   "+msg.toString());
        // Log.info(" "+(int)msg.toString().charAt(1));
-
+        System.out.println("channelRead0");
         ctx.write("1zwexrctbyuhjmisxdrctfvgybhunjimksxdrcfvgybhnjimkoazsexdrcfvgbhunjimfghjkgdhjkl;'sfdghjkl;'dfghj+klgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklm,vmb ,.x ,vsd,l;cs;dav");
         ctx.flush();
 
@@ -21,18 +21,21 @@ public class DecodeToTask extends SimpleChannelInboundHandler  {
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
         Log.info("Registered"+ctx.toString());
+        System.out.println("channelRegistered");
     }
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         super.channelUnregistered(ctx);
         Log.info("Unregistered"+ctx.toString());
+        System.out.println("channelUnregistered");
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
         Log.info("Active"+ctx.toString());
+        System.out.println("channelActive");
 
 
     }
@@ -41,6 +44,7 @@ public class DecodeToTask extends SimpleChannelInboundHandler  {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
         Log.info("Inactive"+ctx.toString());
+        System.out.println("channelInactive");
     }
 
     @Override
@@ -53,5 +57,6 @@ public class DecodeToTask extends SimpleChannelInboundHandler  {
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
         super.channelWritabilityChanged(ctx);
         Log.info("WritabilityChanged"+ctx.toString());
+        System.out.println("channelWritabilityChanged");
     }
 }
