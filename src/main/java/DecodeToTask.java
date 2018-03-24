@@ -12,8 +12,41 @@ public class DecodeToTask extends SimpleChannelInboundHandler  {
         Log.info("msg   "+msg.toString());
        // Log.info(" "+(int)msg.toString().charAt(1));
         System.out.println("channelRead0");
-        ctx.write("1zwexrctbyuhjmisxdrctfvgybhunjimksxdrcfvgybhnjimkoazsexdrcfvgbhunjimfghjkgdhjkl;'sfdghjkl;'dfghj+klgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklmklgmdfsklgmfdsklhmgklm,vmb ,.x ,vsd,l;cs;dav");
-        ctx.flush();
+        String s      = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+            "<project xmlns=\"http://maven.apache.org/POM/4.0.0\"\n" +
+            "         xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n" +
+            "         xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd\">\n" +
+            "    <modelVersion>4.0.0</modelVersion>\n" +
+            "\n" +
+            "    <groupId>123</groupId>\n" +
+            "    <artifactId>345</artifactId>\n" +
+            "    <version>1.0-SNAPSHOT</version>\n" +
+            "    <build>\n" +
+            "        <plugins>\n" +
+            "            <plugin>\n" +
+            "                <groupId>org.apache.maven.plugins</groupId>\n" +
+            "                <artifactId>maven-compiler-plugin</artifactId>\n" +
+            "                <configuration>\n" +
+            "                    <source>1.6</source>\n" +
+            "                    <target>1.6</target>\n" +
+            "                </configuration>\n" +
+            "            </plugin>\n" +
+            "        </plugins>\n" +
+            "    </build>\n" +
+            "\n" +
+            "    <dependencies>\n" +
+            "\n" +
+            "        <dependency>\n" +
+            "            <groupId>io.netty</groupId>\n" +
+            "            <artifactId>netty-all</artifactId> <!-- Use 'netty-all' for 4.0 or above -->\n" +
+            "            <version>4.1.16.Final</version>\n" +
+            "            <scope>compile</scope>\n" +
+            "        </dependency>\n" +
+            "    </dependencies>\n" +
+            "</project>";
+
+        ctx.write(s);
+            ctx.flush();
 
     }
 
