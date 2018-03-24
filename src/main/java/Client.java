@@ -4,8 +4,9 @@ import java.io.*;
 public class Client {
     public static void main(String[] ar) throws IOException {
         int serverPort = 8080; // здесь обязательно нужно указать порт к которому привязывается сервер.
-        //String address = "ec2-52-41-213-200.us-west-2.compute.amazonaws.com"; // это IP-адрес компьютера, где исполняется наша серверная программа.
-        String address = "34.218.147.163";
+        String address = "ec2-34-218-147-163.us-west-2.compute.amazonaws.com"; // это IP-адрес компьютера, где исполняется наша серверная программа.
+        //String address = "34.218.147.163";
+
         // Здесь указан адрес того самого компьютера где будет исполняться и клиент.
         URL whatismyip = new URL("http://checkip.amazonaws.com");
         BufferedReader inn = new BufferedReader(new InputStreamReader(
@@ -14,8 +15,8 @@ public class Client {
         String ip = inn.readLine(); //you get the IP as a String
         System.out.println(ip);
         try {
-            //InetAddress ipAddress = InetAddreФss.getByName(new URL(address).getHost());
-         InetAddress ipAddress = InetAddress.getByName( address );
+            InetAddress ipAddress = InetAddress.getByName(address);
+        // InetAddress ipAddress = InetAddress.getByName( address );
             System.out.println(" готов к работе ");
             System.out.println(ipAddress.getHostAddress());
             Socket socket = new Socket(address, serverPort); // создаем сокет используя IP-адрес и порт сервера.
