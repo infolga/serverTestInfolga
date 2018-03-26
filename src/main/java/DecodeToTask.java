@@ -2,17 +2,21 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import org.mortbay.log.Log;
 
-public class DecodeToTask extends SimpleChannelInboundHandler  {
+public class DecodeToTask extends SimpleChannelInboundHandler {
 
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-       // Log.info("channelRead0"+ctx.toString());
-        Log.info("msg   "+msg.toString());
-       // Log.info(" "+(int)msg.toString().charAt(1));
+        // Log.info("channelRead0"+ctx.toString());
+        Log.info((String) msg);
+        MyRunnableTask myTask = new MyRunnableTask(ctx, (String) msg);
+        PoolThread.instans().submit(myTask);
+
+
+        // Log.info(" "+(int)msg.toString().charAt(1));
         System.out.println("channelRead0");
-        String s      ="15.01.2018 22:00:10\tРазряжается\t88.5%\t32 130\t-3290\t11 710\tТаймер\t\n" +
+        String s = "15.01.2018 22:00:10\tРазряжается\t88.5%\t32 130\t-3290\t11 710\tТаймер\t\n" +
             "15.01.2018 22:00:40\tРазряжается\t88.4%\t32 100\t-3170\t11 733\tТаймер\t\n" +
             "15.01.2018 22:01:10\tРазряжается\t88.3%\t32 060\t-3520\t11 696\tТаймер\t\n" +
             "15.01.2018 22:01:40\tРазряжается\t88.3%\t32 040\t-3240\t11 721\tТаймер\t\n" +
@@ -691,34 +695,32 @@ public class DecodeToTask extends SimpleChannelInboundHandler  {
             "16.01.2018 19:50:33\tРазряжается\t34.3%\t12 460\t-7210\t10 639\tТаймер\t\n" +
             "16.01.2018 19:51:03\tРазряжается\t34.1%\t12 390\t-7400\t10 623\tТаймер\t\n" +
             "16.01.2018 19:51:33\tРазряжается\t34.0%\t12 330\t-7200\t10 541\tТаймер\t\n" +
-            "16.01.2018 19:52:03\tРазряжается\t33.7%\t12 240\t-7400\t10 554\tТаймер\t\n"
-
-           ;
+            "16.01.2018 19:52:03\tРазряжается\t33.7%\t12 240\t-7400\t10 554\tТаймер\t\n";
 
 
-        ctx.write(s);
-            ctx.flush();
+        // ctx.write(s);
+        // ctx.flush();
 
     }
 
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
-        Log.info("Registered"+ctx.toString());
+        Log.info("Registered" + ctx.toString());
         System.out.println("channelRegistered");
     }
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         super.channelUnregistered(ctx);
-        Log.info("Unregistered"+ctx.toString());
+        Log.info("Unregistered" + ctx.toString());
         System.out.println("channelUnregistered");
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
-        Log.info("Active"+ctx.toString());
+        Log.info("Active" + ctx.toString());
         System.out.println("channelActive");
 
 
@@ -727,20 +729,20 @@ public class DecodeToTask extends SimpleChannelInboundHandler  {
     @Override
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
-        Log.info("Inactive"+ctx.toString());
+        Log.info("Inactive" + ctx.toString());
         System.out.println("channelInactive");
     }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         super.channelReadComplete(ctx);
-       // Log.info("channelReadComplete"+ctx.toString());
+        // Log.info("channelReadComplete"+ctx.toString());
     }
 
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
         super.channelWritabilityChanged(ctx);
-        Log.info("WritabilityChanged"+ctx.toString());
+        Log.info("WritabilityChanged" + ctx.toString());
         System.out.println("channelWritabilityChanged");
     }
 }

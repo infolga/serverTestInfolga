@@ -1,5 +1,7 @@
-import java.net.*;
 import java.io.*;
+import java.net.InetAddress;
+import java.net.Socket;
+import java.net.URL;
 
 public class Client {
     public static void main(String[] ar) throws IOException {
@@ -10,13 +12,13 @@ public class Client {
         // Здесь указан адрес того самого компьютера где будет исполняться и клиент.
         URL whatismyip = new URL("http://checkip.amazonaws.com");
         BufferedReader inn = new BufferedReader(new InputStreamReader(
-                whatismyip.openStream()));
+            whatismyip.openStream()));
 
         String ip = inn.readLine(); //you get the IP as a String
         System.out.println(ip);
         try {
             InetAddress ipAddress = InetAddress.getByName(address);
-        // InetAddress ipAddress = InetAddress.getByName( address );
+            // InetAddress ipAddress = InetAddress.getByName( address );
             System.out.println(" готов к работе ");
             System.out.println(ipAddress.getHostAddress());
             Socket socket = new Socket(address, serverPort); // создаем сокет используя IP-адрес и порт сервера.
@@ -32,14 +34,14 @@ public class Client {
 
             // Создаем поток для чтения с клавиатуры.
             BufferedReader keyboard = new BufferedReader(new InputStreamReader(System.in));
-            String line ;
+            String line;
             System.out.println("готов ");
             System.out.println();
 
             while (true) {
                 line = keyboard.readLine(); // ждем пока пользователь введет что-то и нажмет кнопку Enter.
                 System.out.println("отправляю");
-                if( line.equals( "end")){
+                if (line.equals("end")) {
                     break;
                 }
                 out.writeUTF(line); // отсылаем введенную строку текста серверу.
