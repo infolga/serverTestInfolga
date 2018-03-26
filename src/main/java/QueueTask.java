@@ -62,15 +62,12 @@ public class QueueTask {
                 try {
                     if (msg.MSG == MyTask.PACKEGE_MSG) {
 
-                        MyXMLParser myXMLParser = new MyXMLParser(msg.str);
+                        MyXML myXMLParser = new MyXML(msg.str);
                         System.out.println(myXMLParser.getTypeXML());
                         if (MSG.XML_TYPE_REQUEST.equals(myXMLParser.getTypeXML())) {
                             switch (myXMLParser.getIdActionsXML()){
-
                                 case MSG.XML_USER_LOGIN:
-
-                                    System.out.println("sfdsg");
-
+                                    service.submit(new Runnable_USER_LOGIN(myXMLParser,msg.ctx,DB));
                                     break;
                             }
 

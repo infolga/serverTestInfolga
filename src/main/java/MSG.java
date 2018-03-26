@@ -1,4 +1,3 @@
-
 public abstract class MSG {
 
 
@@ -16,4 +15,7 @@ public abstract class MSG {
     public static final String XML_TYPE_RESPONSE = "response";
     public static final String XML_ELEMENT_PHONE = "phone";
     public static final String XML_ELEMENT_PASSWORD = "password";
+
+    public static final String XML_ELEMENT_DRVISE_INFO = "device_info";
+    public static final String XML_ELEMENT_DRVISE_TOKEN = "device_token";
 }

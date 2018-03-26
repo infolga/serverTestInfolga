@@ -9,6 +9,9 @@ public class ServerTestInfolga {
     public static void main(String[] ar) {
 
         try {
+
+
+
             String url;
             String user;
             String password;
@@ -28,7 +31,7 @@ public class ServerTestInfolga {
 
             DB = new PoolingDB(url, user, password);
 
-            String PORT = System.getProperty("port", "8080");
+            String PORT = MyProperties.instans().getProperty("port", "8080");
             int port = Integer.parseInt(PORT);
             ST = new Server_Tetst(QT);
 
