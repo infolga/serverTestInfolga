@@ -17,7 +17,7 @@ public class PoolingDB {
 
     private PoolingDB(String user, String password) {
 
-        System.out.println("Loading underlying JDBC driver.");
+
         try {
             Class.forName("com.mysql.jdbc.Driver");
         } catch (ClassNotFoundException e) {
