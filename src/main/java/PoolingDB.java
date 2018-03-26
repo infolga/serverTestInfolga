@@ -69,7 +69,7 @@ public class PoolingDB {
 
     public static PoolingDB instanse() {
         if (poolingDB == null) {
-            poolingDB = new PoolingDB();
+            poolingDB = new PoolingDB("","");
         }
         return poolingDB;
     }
