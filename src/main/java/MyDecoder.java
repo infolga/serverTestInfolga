@@ -11,15 +11,15 @@ public class MyDecoder extends ByteToMessageDecoder {
 
     @Override
     public void handlerAdded(ChannelHandlerContext ctx) {
-        Log.info("handlerAdded   ");
+
         count = -1;
     }
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf msg, List<Object> out) throws Exception {
 
-        Log.info("handlerAdded  count= " + count);
-        Log.info("handlerAdded  msg.readableBytes()  = " + msg.readableBytes());
+       // Log.info("handlerAdded  count= " + count);
+       // Log.info("handlerAdded  msg.readableBytes()  = " + msg.readableBytes());
 
         if (count == -1) {
             if (msg.readableBytes() < 4) {
