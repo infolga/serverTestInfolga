@@ -9,7 +9,6 @@ import org.jdom2.output.XMLOutputter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 public class MyXML {
 
     private Element root;
@@ -23,7 +22,14 @@ public class MyXML {
         SAXBuilder saxBuilder = new SAXBuilder();
         doc = saxBuilder.build(is);
         root = doc.getRootElement();
+        buf=root;
     }
+
+
+    public int getAttributeResult() {
+        return Integer.parseInt(buf.getAttributeValue("result"));
+    }
+
 
     public String getTypeXML() {
         return root.getName();
@@ -53,9 +59,9 @@ public class MyXML {
                 buf.setAttribute("id", "" + MSG.XML_USER_LOGIN);
                 buf.addContent(new Comment("user.login"));
                 break;
-            case MSG.XML_USER_CREATE:
-                buf.setAttribute("id", "" + MSG.XML_USER_CREATE);
-                buf.addContent(new Comment("user.create"));
+            case MSG.XML_USER_REGISTRATION:
+                buf.setAttribute("id", "" + MSG.XML_USER_REGISTRATION);
+                buf.addContent(new Comment("user.registration"));
                 break;
             default:
                 break;

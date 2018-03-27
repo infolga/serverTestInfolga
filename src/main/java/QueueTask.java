@@ -69,6 +69,10 @@ public class QueueTask {
                                 case MSG.XML_USER_LOGIN:
                                     service.submit(new Runnable_USER_LOGIN(myXMLParser,msg.ctx,DB));
                                     break;
+
+                                case MSG.XML_USER_REGISTRATION:
+                                    service.submit(new Runnable_USER_REG(myXMLParser,msg.ctx,DB));
+                                    break;
                             }
 
 
