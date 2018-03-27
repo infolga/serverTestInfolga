@@ -2,6 +2,7 @@ import io.netty.channel.ChannelFuture;
 import org.jdom2.JDOMException;
 
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -55,7 +56,6 @@ public class QueueTask {
                         } catch (InterruptedException ignored) {
                         }
                     }
-
                     msg = (MyTask) queue.removeFirst();
                 }
 
@@ -86,6 +86,8 @@ public class QueueTask {
                 } catch (JDOMException e) {
                     e.printStackTrace();
                 } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
