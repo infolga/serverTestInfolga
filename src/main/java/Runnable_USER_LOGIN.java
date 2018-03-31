@@ -1,11 +1,10 @@
 import io.netty.channel.ChannelHandlerContext;
+import org.mortbay.log.Log;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Formatter;
-import java.util.Locale;
 
 public class Runnable_USER_LOGIN implements Runnable {
 
@@ -20,7 +19,6 @@ public class Runnable_USER_LOGIN implements Runnable {
         this.ctx = ctx;
         this.db = DB;
         con = db.getConnection();
-        stat = con.createStatement();
     }
 
     @Override
@@ -28,6 +26,10 @@ public class Runnable_USER_LOGIN implements Runnable {
 
         try {
 
+
+            Log.info("Runnable_USER_LOGIN");
+            con.setAutoCommit(false);
+            stat = con.createStatement();
             String phone = myXML.getValueInActionsXML(MSG.XML_ELEMENT_PHONE);
             String password = myXML.getValueInActionsXML(MSG.XML_ELEMENT_PASSWORD);
 
@@ -35,17 +37,14 @@ public class Runnable_USER_LOGIN implements Runnable {
             String device_token = myXML.getValueInActionsXML(MSG.XML_ELEMENT_DRVISE_TOKEN);
 
 
-            if (SQL.SQL_select_users_id_from_users_where_phone(stat, phone)==1) {
-                int user_id = SQL.SQL_select_users_id_from_users_where_phone_password(stat,phone, password);
+            if (SQL.SQL_select_users_id_from_users_where_phone(stat, phone) == 1) {
+                int user_id = SQL.SQL_select_users_id_from_users_where_phone_password(stat, phone, password);
                 if (user_id == -1) {//пароль неверный
                     myXML.setNameRoot(MSG.XML_TYPE_RESPONSE);
                     myXML.setAttributeRoot(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_INCORRECT_PASSWORD));
                     myXML.jumpToChildFromRoot(MSG.XML_ELEMENT_ACTIONS);
                     myXML.setAtribute(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_INCORRECT_PASSWORD));
-                    System.out.println(myXML.toString());
 
-
-                    System.out.println("пароль неверный");
 
                 } else {//ура проходим авторизацию
                     int devices_id = SQL.SQL_select_devises_id_from_devices_where_users_id_device_token(stat, user_id, device_token);
@@ -58,8 +57,6 @@ public class Runnable_USER_LOGIN implements Runnable {
                         SQL.SQL_insert_into_access_users_id_token_created_at_devices_id_valid_until(stat, user_id, devices_id);
                         token = SQL.SQL_select_valid_token_from_access_where_users_id_devices_id(stat, user_id, devices_id);
                     }
-                    System.out.println("token = " + token);
-
                     myXML.setNameRoot(MSG.XML_TYPE_RESPONSE);
                     myXML.setAttributeRoot(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
                     myXML.jumpToChildFromRoot(MSG.XML_ELEMENT_ACTIONS);
@@ -69,16 +66,21 @@ public class Runnable_USER_LOGIN implements Runnable {
 
                     String sql_exe = String.format(sql, user_id);
                     ResultSet R = stat.executeQuery(sql_exe);
-                    System.out.println(sql_exe);
+
                     R.first();
+                    myXML.addChild(MSG.XML_ELEMENT_USERS_ID, Integer.toString(user_id));
+                    myXML.addChild(MSG.XML_ELEMENT_USER_NAME, R.getString(MSG.XML_ELEMENT_USER_NAME));
                     myXML.addChild(MSG.XML_ELEMENT_EMAIL, R.getString(MSG.XML_ELEMENT_EMAIL));
                     myXML.addChild(MSG.XML_ELEMENT_FIRST_NAME, R.getString(MSG.XML_ELEMENT_FIRST_NAME));
                     myXML.addChild(MSG.XML_ELEMENT_LAST_NAME, R.getString(MSG.XML_ELEMENT_LAST_NAME));
-                    myXML.addChild(MSG.XML_ELEMENT_USER_NAME, R.getString(MSG.XML_ELEMENT_USER_NAME));
-                    myXML.addChild(MSG.XML_ELEMENT_USERS_ID, Integer.toString(user_id));
+                    myXML.addChild(MSG.XML_ELEMENT_IS_ACTIVE, R.getString(MSG.XML_ELEMENT_IS_ACTIVE));
+                    myXML.addChild(MSG.XML_ELEMENT_LAST_ONLINE, R.getString(MSG.XML_ELEMENT_LAST_ONLINE));
+
+
+
                     myXML.addChild(MSG.XML_ELEMENT_TOKEN, token);
-                    System.out.println("успешно");
-                    System.out.println(myXML.toString());
+
+
                     R.close();
                 }
 
@@ -87,16 +89,23 @@ public class Runnable_USER_LOGIN implements Runnable {
                 myXML.setAttributeRoot(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_PHONE_NOT_FOUND));
                 myXML.jumpToChildFromRoot(MSG.XML_ELEMENT_ACTIONS);
                 myXML.setAtribute(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_PHONE_NOT_FOUND));
-                System.out.println("пользователь не найден");
-                System.out.println(myXML.toString());
+
 
             }
+            con.commit();
             ctx.write(myXML.toString());
             ctx.flush();
 
 
         } catch (SQLException e) {
             e.printStackTrace();
+            if (con != null) {
+                try {
+                    con.rollback();
+                } catch (SQLException e1) {
+                    e1.printStackTrace();
+                }
+            }
         } finally {
             try {
                 if (stat != null) stat.close();
@@ -104,14 +113,18 @@ public class Runnable_USER_LOGIN implements Runnable {
                 e.printStackTrace();
             }
             try {
-                if (con != null) con.close();
+                if (con != null) {
+                    con.setAutoCommit(true);
+                    con.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
-
-
     }
 
 
 }
+
+
+

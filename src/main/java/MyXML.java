@@ -63,6 +63,15 @@ public class MyXML {
                 buf.setAttribute("id", "" + MSG.XML_USER_REGISTRATION);
                 buf.addContent(new Comment("user.registration"));
                 break;
+            case MSG.XML_CONTACT_ADD:
+                buf.setAttribute("id", "" + MSG.XML_CONTACT_ADD);
+                buf.addContent(new Comment("contact.add"));
+                break;
+            case MSG.XML_GET_USERS_FROM_LIKE:
+                buf.setAttribute("id", "" + MSG.XML_GET_USERS_FROM_LIKE);
+                buf.addContent(new Comment("get.user_from_like"));
+                break;
+
             default:
                 break;
         }
@@ -107,12 +116,25 @@ public class MyXML {
         return this;
     }
 
+    public static Element addChild(Element root, String name, String text) {
+
+        Element child = new Element(name);
+        child.setText(text);
+        root.addContent(child);
+        return root;
+    }
 
 
 
     public MyXML addChild(String name) {
         buf.addContent(new Element(name));
         buf = buf.getChild(name);
+        return this;
+    }
+
+    public MyXML addChildElement(Element name) {
+        buf.addContent(name);
+
         return this;
     }
 

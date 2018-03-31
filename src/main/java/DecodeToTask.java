@@ -20,7 +20,7 @@ public class DecodeToTask extends SimpleChannelInboundHandler {
 
 
         // Log.info(" "+(int)msg.toString().charAt(1));
-        System.out.println(msg);
+        //System.out.println(msg);
 
         // ctx.write(s);
         // ctx.flush();
@@ -31,21 +31,21 @@ public class DecodeToTask extends SimpleChannelInboundHandler {
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
         // Log.info("Registered" + ctx.toString());
-        System.out.println("channelRegistered");
+       // System.out.println("channelRegistered");
     }
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         super.channelUnregistered(ctx);
         //Log.info("Unregistered" + ctx.toString());
-        System.out.println("channelUnregistered");
+       // System.out.println("channelUnregistered");
     }
 
     @Override
     public void channelActive(ChannelHandlerContext ctx) throws Exception {
         super.channelActive(ctx);
         //Log.info("Active" + ctx.toString());
-        System.out.println("channelActive");
+       // System.out.println("channelActive");
 
 
     }
@@ -54,19 +54,19 @@ public class DecodeToTask extends SimpleChannelInboundHandler {
     public void channelInactive(ChannelHandlerContext ctx) throws Exception {
         super.channelInactive(ctx);
         //Log.info("Inactive" + ctx.toString());
-        System.out.println("channelInactive");
+       // System.out.println("channelInactive");
     }
 
     @Override
     public void channelReadComplete(ChannelHandlerContext ctx) throws Exception {
         super.channelReadComplete(ctx);
-        Log.info("channelReadComplete" + ctx.toString());
+       // Log.info("channelReadComplete" + ctx.toString());
     }
 
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
         super.channelWritabilityChanged(ctx);
         // Log.info("WritabilityChanged" + ctx.toString());
-        System.out.println("channelWritabilityChanged");
+      //  System.out.println("channelWritabilityChanged");
     }
 }

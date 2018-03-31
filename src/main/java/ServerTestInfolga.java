@@ -2,14 +2,15 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Pattern;
 
 public class ServerTestInfolga {
 
 
-    public static void main(String[] ar) {
+    public static void main(String[] args) throws Exception {
 
+        boolean matches = Pattern.matches("[+]?[38]?\\d{10}", "+38045646");
         try {
-
 
 
             String url;
@@ -49,6 +50,6 @@ public class ServerTestInfolga {
         }
 
     }
-
-
 }
+
+

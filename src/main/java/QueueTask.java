@@ -1,5 +1,6 @@
 import io.netty.channel.ChannelFuture;
 import org.jdom2.JDOMException;
+import org.mortbay.log.Log;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -30,7 +31,11 @@ public class QueueTask {
     }
 
     public QueueTask() {
-        service = Executors.newCachedThreadPool();
+
+      //  service = Executors.newCachedThreadPool();
+
+        service = Executors.newFixedThreadPool(10);
+
         queue = new LinkedList();
         threads = new MyThread();
         threads.setPriority(Thread.MAX_PRIORITY);
@@ -63,16 +68,37 @@ public class QueueTask {
                     if (msg.MSG == MyTask.PACKEGE_MSG) {
 
                         MyXML myXMLParser = new MyXML(msg.str);
-                        System.out.println(myXMLParser.getTypeXML());
+
+                        Log.info("PACKEGE_MSG", "PACKEGE_MSG" +myXMLParser.getTypeXML() );
                         if (MSG.XML_TYPE_REQUEST.equals(myXMLParser.getTypeXML())) {
-                            switch (myXMLParser.getIdActionsXML()){
+                            switch (myXMLParser.getIdActionsXML()) {
                                 case MSG.XML_USER_LOGIN:
-                                    service.submit(new Runnable_USER_LOGIN(myXMLParser,msg.ctx,DB));
+                                    Log.info("PACKEGE_MSG", "XML_USER_LOGIN");
+
+                                    service.submit(new Runnable_USER_LOGIN(myXMLParser, msg.ctx, DB));
                                     break;
 
                                 case MSG.XML_USER_REGISTRATION:
-                                    service.submit(new Runnable_USER_REG(myXMLParser,msg.ctx,DB));
+                                    Log.info("PACKEGE_MSG", "XML_USER_REGISTRATION");
+                                    service.submit(new Runnable_USER_REG(myXMLParser, msg.ctx, DB));
                                     break;
+                                case MSG.XML_CONTACT_ADD:
+                                    Log.info("PACKEGE_MSG", "XML_CONTACT_ADD");
+                                    service.submit(new Runnable_CONTACT_ADD(myXMLParser, msg.ctx, DB));
+                                    break;
+                                case MSG.XML_GET_USERS_FROM_LIKE:
+                                    Log.info("PACKEGE_MSG", "XML_GET_USERS_FROM_LIKE");
+                                    service.submit(new Runnable_GET_USER_FROM_LIKE(myXMLParser, msg.ctx, DB));
+                                    break;
+
+
+
+
+                                default:
+
+                                    Log.info("PACKEGE_MSG", "XML_OTHER");
+                                    break;
+
                             }
 
 
