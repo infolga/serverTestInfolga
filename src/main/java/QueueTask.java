@@ -74,7 +74,6 @@ public class QueueTask {
                             switch (myXMLParser.getIdActionsXML()) {
                                 case MSG.XML_USER_LOGIN:
                                     Log.info("PACKEGE_MSG", "XML_USER_LOGIN");
-
                                     service.submit(new Runnable_USER_LOGIN(myXMLParser, msg.ctx, DB));
                                     break;
 
@@ -90,8 +89,14 @@ public class QueueTask {
                                     Log.info("PACKEGE_MSG", "XML_GET_USERS_FROM_LIKE");
                                     service.submit(new Runnable_GET_USER_FROM_LIKE(myXMLParser, msg.ctx, DB));
                                     break;
-
-
+                                case MSG.XML_CONVERSATION_ADD:
+                                    Log.info("PACKEGE_MSG", "XML_CONVERSATION_ADD");
+                                    service.submit(new Runnable_CONVERSATION_ADD(myXMLParser, msg.ctx, DB));
+                                    break;
+                                case MSG.XML_GET_ALL_CONVERSATION:
+                                    Log.info("PACKEGE_MSG", "XML_GET_ALL_CONVERSATION");
+                                    service.submit(new Runnable_GET_ALL_CONVERSATION(myXMLParser, msg.ctx, DB));
+                                    break;
 
 
                                 default:

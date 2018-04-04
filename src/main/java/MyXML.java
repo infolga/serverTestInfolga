@@ -9,6 +9,8 @@ import org.jdom2.output.XMLOutputter;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
+
 public class MyXML {
 
     private Element root;
@@ -22,30 +24,8 @@ public class MyXML {
         SAXBuilder saxBuilder = new SAXBuilder();
         doc = saxBuilder.build(is);
         root = doc.getRootElement();
-        buf=root;
+        buf = root;
     }
-
-
-    public int getAttributeResult() {
-        return Integer.parseInt(buf.getAttributeValue("result"));
-    }
-
-
-    public String getTypeXML() {
-        return root.getName();
-    }
-
-    public int getIdActionsXML() {
-        buf = root.getChild("actions");
-        return Integer.parseInt(buf.getAttributeValue("id"));
-    }
-
-    public String getValueInActionsXML(String s) {
-        buf = root.getChild("actions");
-        buf = buf.getChild(s);
-        return buf.getText();
-    }
-
 
     public MyXML(String nameRoot, int Actionid) {
 
@@ -71,11 +51,55 @@ public class MyXML {
                 buf.setAttribute("id", "" + MSG.XML_GET_USERS_FROM_LIKE);
                 buf.addContent(new Comment("get.user_from_like"));
                 break;
+            case MSG.XML_CONVERSATION_ADD:
+                buf.setAttribute("id", "" + MSG.XML_CONVERSATION_ADD);
+                buf.addContent(new Comment("conversation.add"));
+                break;
 
             default:
                 break;
         }
     }
+
+
+    public int getAttributeResult() {
+        return Integer.parseInt(buf.getAttributeValue("result"));
+    }
+
+
+    public String getTypeXML() {
+        return root.getName();
+    }
+
+    public int getIdActionsXML() {
+        buf = root.getChild("actions");
+        return Integer.parseInt(buf.getAttributeValue("id"));
+    }
+
+
+    public List<Element> getCildrenListElement(String name) {
+        buf = root.getChild("actions");
+        return buf.getChildren(name);
+    }
+
+    public Element getCildElement(String name) {
+        buf = root.getChild("actions");
+        return buf.getChild(name);
+    }
+
+
+    public String getValueInActionsXML(String s) {
+        buf = root.getChild("actions");
+        buf = buf.getChild(s);
+        if (buf != null) {
+            return buf.getText();
+
+        } else {
+            return "";
+        }
+
+    }
+
 
     public MyXML setNameRoot(String name) {
         root.setName(name);
@@ -84,34 +108,36 @@ public class MyXML {
     }
 
     public MyXML setAttributeRoot(String name, String value) {
-        root.setAttribute(name,value);
+        root.setAttribute(name, value);
         return this;
     }
 
-    public MyXML removeAttributeRoot(String name){
+    public MyXML removeAttributeRoot(String name) {
         root.removeAttribute(name);
         return this;
     }
-    public MyXML jumpToChildFromRoot(String name){
+
+    public MyXML jumpToChildFromRoot(String name) {
         buf = root.getChild(name);
         return this;
     }
-    public MyXML jumpToChildFrom(String name){
+
+    public MyXML jumpToChildFrom(String name) {
         buf = buf.getChild(name);
         return this;
     }
 
-    public MyXML setName (String name) {
+    public MyXML setName(String name) {
         buf.setName(name);
         return this;
     }
 
     public MyXML setAttribute(String name, String value) {
-        buf.setAttribute(name,value);
+        buf.setAttribute(name, value);
         return this;
     }
 
-    public MyXML removeAttribute(String name){
+    public MyXML removeAttribute(String name) {
         buf.removeAttribute(name);
         return this;
     }
@@ -123,7 +149,6 @@ public class MyXML {
         root.addContent(child);
         return root;
     }
-
 
 
     public MyXML addChild(String name) {
@@ -160,9 +185,9 @@ public class MyXML {
         if (d == null) {
             d = new Document(root);
         }
-        String s = (new XMLOutputter(Format.getPrettyFormat())).outputString(d);
 
-        return s;
+
+        return (new XMLOutputter(Format.getPrettyFormat())).outputString(d);
     }
 
 

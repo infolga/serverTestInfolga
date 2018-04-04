@@ -1,11 +1,15 @@
 import io.netty.channel.ChannelHandlerContext;
+import org.jdom2.Element;
 import org.mortbay.log.Log;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-public class Runnable_CONTACT_ADD implements Runnable {
+public class Runnable_GET_ALL_CONVERSATION implements Runnable {
 
     private MyXML myXML;
     private ChannelHandlerContext ctx;
@@ -13,7 +17,7 @@ public class Runnable_CONTACT_ADD implements Runnable {
     private Connection con;
     private Statement stat;
 
-    public Runnable_CONTACT_ADD(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db) throws SQLException {
+    public Runnable_GET_ALL_CONVERSATION(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db) throws SQLException {
         this.myXML = myXML;
         this.ctx = ctx;
         this.db = db;
@@ -25,8 +29,8 @@ public class Runnable_CONTACT_ADD implements Runnable {
     public void run() {
         try {
 
-            Log.info("Runnable_CONTACT_ADD");
-
+            Log.info("Runnable_GET_ALL_CONVERSATION");
+            Log.info(myXML.toString());
             con.setAutoCommit(false);
             stat = con.createStatement();
 
@@ -34,28 +38,18 @@ public class Runnable_CONTACT_ADD implements Runnable {
             int user_id = SQL.SQL_select_users_id_from_access_where_token(stat, token);
 
             if (user_id != -1) {// токен найден и рабочий
-                String phone = myXML.getValueInActionsXML(MSG.XML_ELEMENT_PHONE);
-                String first_name = myXML.getValueInActionsXML(MSG.XML_ELEMENT_FIRST_NAME);
-                String last_name = myXML.getValueInActionsXML(MSG.XML_ELEMENT_LAST_NAME);
 
-                int contacts_id = SQL.SQL_select_contacts_id_from_contacts_where_phone(stat, phone);//проверка наличия контакта в бд
-                if (contacts_id == -1) {//или вставка
-                    contacts_id = SQL.SQL_insert_into_contacts_phone_email_first_name_last_name_created_at(stat, phone, "", first_name, last_name);
-                    //contacts_id = SQL.SQL_select_contacts_id_from_contacts_where_phone(stat, phone);
-                }
-                //проверка есть ли этот контакт у этого пользователя
-                if (SQL.SQL_select_user_id_contact_id_from_user_contact_where_users_id_contact_id(stat, user_id, contacts_id) == -1) {
-                    SQL.SQL_insert_into_user_contact_user_id_contact_id_first_name_last_name_created_at_updated_at(stat, user_id, contacts_id, first_name, last_name);
-                }
+
+                ArrayList<Myin> myins = SQL.SQL_get_Array_сonversation_from_conversation(stat,user_id);
 
                 myXML.setNameRoot(MSG.XML_TYPE_RESPONSE);
                 myXML.setAttributeRoot(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
                 myXML.jumpToChildFromRoot(MSG.XML_ELEMENT_ACTIONS);
                 myXML.setAtribute(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
 
-
-                myXML.addChild(MSG.XML_ELEMENT_CONTACT_ID, Integer.toString(contacts_id));
-
+                for (int i = 0; i <myins.size() ; i++) {
+                    myXML.addChildElement(myins.get(i).getXMLElement());
+                }
 
             } else {// токен недействительный
                 myXML.setNameRoot(MSG.XML_TYPE_RESPONSE);

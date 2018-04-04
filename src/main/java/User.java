@@ -4,7 +4,7 @@ import org.jdom2.Element;
  * Created by infol on 31.03.2018.
  */
 
-public class User {
+public class User implements Myin {
     private int users_id;
     private String user_name;
     private String phone;

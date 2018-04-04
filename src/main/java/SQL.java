@@ -18,7 +18,7 @@ public class SQL {
     public final static Calendar calendar;
 
 
-    public static final DateFormat df = new SimpleDateFormat("YYYY-MM-dd kk:mm:ss");
+    public static final DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
     public static int countRow(ResultSet R) throws SQLException {
         int size = 0;
@@ -60,7 +60,7 @@ public class SQL {
     }
 
 
-    public static void SQL_insert_into_users_phone_email_password_first_name_last_name_user_name_created_at_(Statement stat, String phone, String email, String password, String first_name, String last_name, String user_name) throws SQLException {
+    public static int SQL_insert_into_users_phone_email_password_first_name_last_name_user_name_created_at_(Statement stat, String phone, String email, String password, String first_name, String last_name, String user_name) throws SQLException {
         SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_insert_into_users_phone_email_password_first_name_last_name_user_name_created_at_", "66 ");
         Date created_at = new java.util.Date();
@@ -73,11 +73,24 @@ public class SQL {
         String sql_exe = String.format(sql, phone, email, password, first_name, last_name, user_name, df.format(created_at), df.format(valid_), df.format(created_at));
 
         stat.executeUpdate(sql_exe);
-
+        return SQL_select_LAST_INSERT_ID(stat);
 
     }
 
-    public static void SQL_insert_into_contacts_phone_email_first_name_last_name_created_at(Statement stat, String phone, String email, String first_name, String last_name) throws SQLException {
+
+    public static int SQL_insert_into_participants_conversation_id_users_id(Statement stat, int conversation_id, int users_id) throws SQLException {
+        SQL_set_time_zone(stat);
+        String sql = MyProperties.instans().getProperty("SQL_insert_into_participants_conversation_id_users_id", "66 ");
+
+        Date created_at = new java.util.Date();
+
+        String sql_exe = String.format(sql, conversation_id, users_id, df.format(created_at));
+        stat.executeUpdate(sql_exe);
+        return SQL_select_LAST_INSERT_ID(stat);
+    }
+
+
+    public static int SQL_insert_into_contacts_phone_email_first_name_last_name_created_at(Statement stat, String phone, String email, String first_name, String last_name) throws SQLException {
         SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_insert_into_contacts_phone_email_first_name_last_name_created_at", "66 ");
 
@@ -86,6 +99,7 @@ public class SQL {
         String sql_exe = String.format(sql, phone, email, first_name, last_name, df.format(created_at));
         System.out.println(sql_exe);
         stat.executeUpdate(sql_exe);
+        return SQL_select_LAST_INSERT_ID(stat);
     }
 
 
@@ -105,6 +119,29 @@ public class SQL {
         String sql_exe = String.format(sql, phone);
         ResultSet R = stat.executeQuery(sql_exe);
         return countRow(R);
+
+    }
+
+
+    public static Conversation SQL_select_conversation_all_from_conversation_where_conversation_id_users_id(Statement stat, int conversation_id, int user_id) throws SQLException {
+        SQL_set_time_zone(stat);
+        String sql = MyProperties.instans().getProperty("SQL_select_conversation_all_from_conversation_where_conversation_id_users_id", "66 ");
+        String sql_exe = String.format(sql, conversation_id, user_id);
+        ResultSet R = stat.executeQuery(sql_exe);
+        Conversation conversation = new Conversation();
+
+        R.first();
+        conversation.setConversation_id(R.getInt("con_id"));
+        conversation.setTitle(R.getString("title"));
+        conversation.setPhoto_id(R.getInt("photo_id"));
+        conversation.setCreator_id(R.getInt("creator_id"));
+        conversation.setCreated_at(R.getString("created_at"));
+        conversation.setTime_last_viev(R.getString("last_view"));
+        conversation.setType(R.getString("type"));
+        conversation.setName_conversation(R.getString("name_conversation"));
+        R.close();
+        return conversation;
+
 
     }
 
@@ -131,13 +168,14 @@ public class SQL {
 
     }
 
-    public static void SQL_insert_into_devices_users_id_device_info_device_token(Statement stat, int user_id, String device_info, String device_token) throws SQLException {
+    public static int SQL_insert_into_devices_users_id_device_info_device_token(Statement stat, int user_id, String device_info, String device_token) throws SQLException {
         SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_insert_into_devices_users_id_device_info_device_token", "66 ");
         //System.out.println("addDeviseToUsers ");
         String sql_exe = String.format(sql, user_id, device_info, device_token);
 
         stat.executeUpdate(sql_exe);
+        return SQL_select_LAST_INSERT_ID(stat);
 
     }
 
@@ -169,7 +207,7 @@ public class SQL {
     }
 
 
-    public static void SQL_insert_into_access_users_id_token_created_at_devices_id_valid_until(Statement stat, int user_id, int devices_id) throws SQLException {
+    public static int SQL_insert_into_access_users_id_token_created_at_devices_id_valid_until(Statement stat, int user_id, int devices_id) throws SQLException {
         SQL_set_time_zone(stat);
         // System.out.println("SQL_insert_new_token ");
         Date created_at = new java.util.Date();
@@ -190,10 +228,42 @@ public class SQL {
         //System.out.println(sql_exe);
 
         stat.executeUpdate(sql_exe);
+        return SQL_select_LAST_INSERT_ID(stat);
     }
 
 
-    public static void SQL_insert_into_user_contact_user_id_contact_id_first_name_last_name_created_at_updated_at(Statement stat, int user_id, int contact_id, String first_name, String last_name) throws SQLException {
+//    public static int SQL_select_conversation_id_from_conversation_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at(Statement stat, String title, String name_conversation, int photo_id, String type, int creator_id, Date created_at) throws SQLException {
+//        SQL_set_time_zone(stat);
+//        // System.out.println("SQL_insert_new_token ");
+//
+//        Calendar instance = Calendar.getInstance();
+//
+//        String sql = MyProperties.instans().getProperty("SQL_select_conversation_id_from_conversation_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at", "66 ");
+//        String sql_exe = String.format(sql, title, name_conversation, photo_id, type, creator_id, df.format(created_at), df.format(created_at));
+//
+//        ResultSet R = stat.executeQuery(sql_exe);
+//        return Return_id(R, "id");
+//
+//    }
+
+
+    public static int SQL_insert_into_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at(Statement stat, String title, String name_conversation, int photo_id, String type, int creator_id, Date created_at) throws SQLException {
+        SQL_set_time_zone(stat);
+        // System.out.println("SQL_insert_new_token ");
+
+        Calendar instance = Calendar.getInstance();
+
+        String sql = MyProperties.instans().getProperty("SQL_insert_into_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at", "66 ");
+        String sql_exe = String.format(sql, title, name_conversation, photo_id, type, creator_id, df.format(created_at), df.format(created_at));
+
+        //System.out.println(sql_exe);
+        stat.executeUpdate(sql_exe);
+        return SQL_select_LAST_INSERT_ID(stat);
+
+    }
+
+
+    public static int SQL_insert_into_user_contact_user_id_contact_id_first_name_last_name_created_at_updated_at(Statement stat, int user_id, int contact_id, String first_name, String last_name) throws SQLException {
         SQL_set_time_zone(stat);
         // System.out.println("SQL_insert_new_token ");
         Date created_at = new java.util.Date();
@@ -205,6 +275,7 @@ public class SQL {
 
         //System.out.println(sql_exe);
         stat.executeUpdate(sql_exe);
+        return SQL_select_LAST_INSERT_ID(stat);
 
 
     }
@@ -223,6 +294,20 @@ public class SQL {
     }
 
 
+    public static int SQL_get_common_conversation_id_single_where_users_id1_and_users_id2(Statement stat, int user_id, int user_id2) throws SQLException {
+        SQL_set_time_zone(stat);
+        String sql = MyProperties.instans().getProperty("SQL_get_common_conversation_id_single_where_users_id1_and_users_id2", "66 ");
+        // System.out.println("getDeviseIdToUsers ");
+        String sql_exe = String.format(sql, user_id, user_id2);
+        System.out.println(sql_exe);
+
+        ResultSet R = stat.executeQuery(sql_exe);
+        return Return_id(R, "id");
+
+
+    }
+
+
     private static void SQL_set_time_zone(Statement stat) throws SQLException {
         String sql = MyProperties.instans().getProperty("SQL_set_time_zone", "66 ");
         stat.execute(sql);
@@ -233,7 +318,7 @@ public class SQL {
         SQL_set_time_zone(stat);
 
         String sql = MyProperties.instans().getProperty("SQL_get_Array_users_from_users_like", "66 ");
-        String sql_exe = String.format(sql, "%"+user_name_like+"%", Integer.toString(afte), Integer.toString(before - afte+1));
+        String sql_exe = String.format(sql, "%" + user_name_like + "%", Integer.toString(afte), Integer.toString(before - afte + 1));
         Log.info(sql_exe);
         ResultSet R = stat.executeQuery(sql_exe);
 
@@ -252,6 +337,87 @@ public class SQL {
             arrayusers.add(user);
         }
         return arrayusers;
+    }
+
+    public static User SQL_get_users_from_users_where_id(Statement stat, int user_id) throws SQLException {
+        SQL_set_time_zone(stat);
+
+        String sql = MyProperties.instans().getProperty("SQL_select_all_from_users_where_users_id", "66 ");
+        String sql_exe = String.format(sql, user_id);
+        Log.info(sql_exe);
+        ResultSet R = stat.executeQuery(sql_exe);
+
+
+        R.next();
+        User user = new User();
+        user.setUsers_id(R.getInt("id"));
+        user.setPhone(R.getString("phone"));
+        user.setEmail(R.getString("email"));
+        user.setFirst_name(R.getString("first_name"));
+        user.setLast_name(R.getString("last_name"));
+        user.setUser_name(R.getString("user_name"));
+        user.setIs_active(R.getInt("is_active"));
+
+        user.setLast_online_at(R.getString("last_online_at"));
+
+        return user;
+    }
+
+
+    public static ArrayList<Myin> SQL_get_Array_сonversation_from_conversation(Statement stat, int user_id) throws SQLException {
+        SQL_set_time_zone(stat);
+
+        String sql = MyProperties.instans().getProperty("SQL_select_ALL_conversation", "66 ");
+        String sql_exe = String.format(sql, user_id);
+        Log .info(sql_exe);
+        ResultSet R = stat.executeQuery(sql_exe);
+        ArrayList<Myin> myinArrayList = new ArrayList<>();
+        while (R.next()) {
+
+            Conversation conversation = new Conversation();
+            Messages messages = new Messages();
+            conversation.setConversation_id(R.getInt("con_id"));
+            conversation.setTitle(R.getString("con_title"));
+            conversation.setName_conversation(R.getString("con_name_conversation"));
+            conversation.setPhoto_id(R.getInt("con_photo_id"));
+            conversation.setType(R.getString("con_type"));
+            conversation.setCreated_at(R.getString("con_created_at"));
+            conversation.setCreator_id(R.getInt("con_creator_id"));
+            conversation.setTime_last_viev(R.getString("par_last_view"));
+            myinArrayList.add(conversation);
+
+            R.getInt("mes_id");
+            if (!R.wasNull()) {
+                messages.setConversation_id(R.getInt("con_id"));
+                Log.info(Integer.toString(R.getInt("mes_id")));
+                messages.setId(R.getInt("mes_id"));
+                messages.setSender_id(R.getInt("mes_sender_id"));
+                messages.setMessage_type(R.getString("mes_message_type"));
+                messages.setMessage(R.getString("mes_message"));
+                messages.setAttachment_thumb_url(R.getString("mes_attachment_thumb_url"));
+                messages.setAttachment_url(R.getString("mes_attachment_url"));
+                messages.setCreated_at(R.getString("mes_created_at"));
+
+                myinArrayList.add(messages);
+            }
+
+        }
+
+        R.close();
+        return myinArrayList;
+
+
+    }
+
+
+    private static int SQL_select_LAST_INSERT_ID(Statement stat) throws SQLException {
+        String sql = MyProperties.instans().getProperty("SQL_select_LAST_INSERT_ID", "66 ");
+
+        ResultSet R = stat.executeQuery(sql);
+        R.first();
+        int id = R.getInt("id");
+        R.close();
+        return id;
     }
 
 

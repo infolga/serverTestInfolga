@@ -25,8 +25,6 @@ public class Runnable_USER_LOGIN implements Runnable {
     public void run() {
 
         try {
-
-
             Log.info("Runnable_USER_LOGIN");
             con.setAutoCommit(false);
             stat = con.createStatement();
@@ -36,7 +34,7 @@ public class Runnable_USER_LOGIN implements Runnable {
             String device_info = myXML.getValueInActionsXML(MSG.XML_ELEMENT_DRVISE_INFO);
             String device_token = myXML.getValueInActionsXML(MSG.XML_ELEMENT_DRVISE_TOKEN);
 
-
+            //проверка номера в бд
             if (SQL.SQL_select_users_id_from_users_where_phone(stat, phone) == 1) {
                 int user_id = SQL.SQL_select_users_id_from_users_where_phone_password(stat, phone, password);
                 if (user_id == -1) {//пароль неверный
@@ -48,10 +46,12 @@ public class Runnable_USER_LOGIN implements Runnable {
 
                 } else {//ура проходим авторизацию
                     int devices_id = SQL.SQL_select_devises_id_from_devices_where_users_id_device_token(stat, user_id, device_token);
+                    //проверка наличия этого устройства в бд
                     if (devices_id == -1) {
-                        SQL.SQL_insert_into_devices_users_id_device_info_device_token(stat, user_id, device_info, device_token);
-                        devices_id = SQL.SQL_select_devises_id_from_devices_where_users_id_device_token(stat, user_id, device_token);
+                        devices_id=SQL.SQL_insert_into_devices_users_id_device_info_device_token(stat, user_id, device_info, device_token);
+                       // devices_id = SQL.SQL_select_devises_id_from_devices_where_users_id_device_token(stat, user_id, device_token);
                     }
+                    //поиск валидного токена
                     String token = SQL.SQL_select_valid_token_from_access_where_users_id_devices_id(stat, user_id, devices_id);
                     if (token == null) {
                         SQL.SQL_insert_into_access_users_id_token_created_at_devices_id_valid_until(stat, user_id, devices_id);
@@ -62,26 +62,10 @@ public class Runnable_USER_LOGIN implements Runnable {
                     myXML.jumpToChildFromRoot(MSG.XML_ELEMENT_ACTIONS);
                     myXML.setAtribute(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
 
-                    String sql = MyProperties.instans().getProperty("SQL_select_all_from_users_where_users_id", "66 ");
-
-                    String sql_exe = String.format(sql, user_id);
-                    ResultSet R = stat.executeQuery(sql_exe);
-
-                    R.first();
-                    myXML.addChild(MSG.XML_ELEMENT_USERS_ID, Integer.toString(user_id));
-                    myXML.addChild(MSG.XML_ELEMENT_USER_NAME, R.getString(MSG.XML_ELEMENT_USER_NAME));
-                    myXML.addChild(MSG.XML_ELEMENT_EMAIL, R.getString(MSG.XML_ELEMENT_EMAIL));
-                    myXML.addChild(MSG.XML_ELEMENT_FIRST_NAME, R.getString(MSG.XML_ELEMENT_FIRST_NAME));
-                    myXML.addChild(MSG.XML_ELEMENT_LAST_NAME, R.getString(MSG.XML_ELEMENT_LAST_NAME));
-                    myXML.addChild(MSG.XML_ELEMENT_IS_ACTIVE, R.getString(MSG.XML_ELEMENT_IS_ACTIVE));
-                    myXML.addChild(MSG.XML_ELEMENT_LAST_ONLINE, R.getString(MSG.XML_ELEMENT_LAST_ONLINE));
-
-
-
+                    User user = SQL.SQL_get_users_from_users_where_id(stat, user_id);
                     myXML.addChild(MSG.XML_ELEMENT_TOKEN, token);
 
-
-                    R.close();
+                    myXML.addChildElement(user.getXMLElement());
                 }
 
             } else {//пользователь не найден
