@@ -1,3 +1,4 @@
+import org.apache.commons.codec.binary.Base64;
 import org.mortbay.log.Log;
 
 import java.sql.ResultSet;
@@ -218,8 +219,8 @@ public class SQL {
         Date valid_until = instance.getTime();
 
         String str = "" + user_id + created_at.toString() + devices_id + valid_until.toString();
-
-        byte[] encodedBytes = Base64.getEncoder().encode(str.getBytes());
+        byte[] encodedBytes = Base64.encodeBase64(str.getBytes());
+       // byte[] encodedBytes = Base64.getEncoder().encode(str.getBytes());
         String token = new String(encodedBytes);//генерация токена
 
         String sql = MyProperties.instans().getProperty("SQL_insert_into_access_users_id_token_created_at_devices_id_valid_until", "66 ");
