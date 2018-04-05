@@ -1,13 +1,10 @@
 import io.netty.channel.ChannelHandlerContext;
-import org.jdom2.Element;
 import org.mortbay.log.Log;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 public class Runnable_GET_ALL_CONVERSATION implements Runnable {
 
@@ -40,15 +37,19 @@ public class Runnable_GET_ALL_CONVERSATION implements Runnable {
             if (user_id != -1) {// токен найден и рабочий
 
 
-                ArrayList<Myin> myins = SQL.SQL_get_Array_сonversation_from_conversation(stat,user_id);
+                ArrayList<Myin> myins = SQL.SQL_get_Array_сonversation_from_conversation(stat, user_id);
 
                 myXML.setNameRoot(MSG.XML_TYPE_RESPONSE);
                 myXML.setAttributeRoot(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
                 myXML.jumpToChildFromRoot(MSG.XML_ELEMENT_ACTIONS);
                 myXML.setAtribute(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
 
-                for (int i = 0; i <myins.size() ; i++) {
+                for (int i = 0; i < myins.size(); i++) {
                     myXML.addChildElement(myins.get(i).getXMLElement());
+                }
+                ArrayList<Myin> participants = SQL.SQL_select_first_15_participants_and_user_in_each_conversation_where_user_id(stat, user_id);
+                for (int i = 0; i < participants.size(); i++) {
+                    myXML.addChildElement(participants.get(i).getXMLElement());
                 }
 
             } else {// токен недействительный
@@ -60,6 +61,9 @@ public class Runnable_GET_ALL_CONVERSATION implements Runnable {
 
 
             con.commit();
+
+            //System.out.println(myXML.toString());
+
             ctx.write(myXML.toString());
             ctx.flush();
         } catch (SQLException e) {

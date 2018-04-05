@@ -5,6 +5,7 @@ import org.mortbay.log.Log;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -66,6 +67,11 @@ public class Runnable_CONVERSATION_ADD implements Runnable {
                     myXML.jumpToChildFromRoot(MSG.XML_ELEMENT_ACTIONS);
                     myXML.setAtribute(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
                     myXML.addChildElement(conversation.getXMLElement());
+
+                    ArrayList<Myin> myins = SQL.SQL_get_Array_participants_from_participants_where_conversation_id(stat, conv_id);
+                    for (int i = 0; i < myins.size(); i++) {
+                        myXML.addChildElement(myins.get(i).getXMLElement());
+                    }
 
 
                 } else if (type.equals(MSG.XML_ELEMENT_TYPE_GROUP)) {

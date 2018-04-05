@@ -6,7 +6,10 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class SQL {
 
@@ -220,7 +223,7 @@ public class SQL {
 
         String str = "" + user_id + created_at.toString() + devices_id + valid_until.toString();
         byte[] encodedBytes = Base64.encodeBase64(str.getBytes());
-       // byte[] encodedBytes = Base64.getEncoder().encode(str.getBytes());
+        // byte[] encodedBytes = Base64.getEncoder().encode(str.getBytes());
         String token = new String(encodedBytes);//генерация токена
 
         String sql = MyProperties.instans().getProperty("SQL_insert_into_access_users_id_token_created_at_devices_id_valid_until", "66 ");
@@ -340,6 +343,39 @@ public class SQL {
         return arrayusers;
     }
 
+
+    public static ArrayList<Myin> SQL_select_first_15_participants_and_user_in_each_conversation_where_user_id(Statement stat, int user_id) throws SQLException {
+        SQL_set_time_zone(stat);
+
+        String sql = MyProperties.instans().getProperty("SQL_select_first_15_participants_in_each_conversation_where_user_id", "66 ");
+        String sql_exe = String.format(sql, user_id);
+        Log.info(sql_exe);
+        ResultSet R = stat.executeQuery(sql_exe);
+
+        ArrayList<Myin> arrayusers = new ArrayList<>();
+        while (R.next()) {
+            Participants participants = new Participants();
+            participants.setConversation_id(R.getInt("conversation_id"));
+            participants.setId_participants(R.getInt("id"));
+            participants.setUsers_id(R.getInt("users_id"));
+            arrayusers.add(participants);
+
+            User user = new User();
+            user.setUsers_id(R.getInt("us_id"));
+            user.setPhone(R.getString("us_phone"));
+            user.setEmail(R.getString("us_email"));
+            user.setFirst_name(R.getString("us_first_name"));
+            user.setLast_name(R.getString("us_last_name"));
+            user.setUser_name(R.getString("us_user_name"));
+            user.setIs_active(R.getInt("us_is_active"));
+
+            user.setLast_online_at(R.getString("us_last_online_at"));
+            arrayusers.add(user);
+        }
+        return arrayusers;
+    }
+
+
     public static User SQL_get_users_from_users_where_id(Statement stat, int user_id) throws SQLException {
         SQL_set_time_zone(stat);
 
@@ -370,7 +406,7 @@ public class SQL {
 
         String sql = MyProperties.instans().getProperty("SQL_select_ALL_conversation", "66 ");
         String sql_exe = String.format(sql, user_id);
-        Log .info(sql_exe);
+        Log.info(sql_exe);
         ResultSet R = stat.executeQuery(sql_exe);
         ArrayList<Myin> myinArrayList = new ArrayList<>();
         while (R.next()) {
@@ -386,6 +422,15 @@ public class SQL {
             conversation.setCreator_id(R.getInt("con_creator_id"));
             conversation.setTime_last_viev(R.getString("par_last_view"));
             myinArrayList.add(conversation);
+            if (!conversation.getType().equals("single")) {
+
+                Participants participants = new Participants();
+                participants.setUsers_id(user_id);
+                participants.setConversation_id(R.getInt("con_id"));
+                participants.setId_participants(R.getInt("par_id"));
+                myinArrayList.add(participants);
+            }
+
 
             R.getInt("mes_id");
             if (!R.wasNull()) {
@@ -404,6 +449,28 @@ public class SQL {
 
         }
 
+        R.close();
+        return myinArrayList;
+
+
+    }
+
+
+    public static ArrayList<Myin> SQL_get_Array_participants_from_participants_where_conversation_id(Statement stat, int conversation_id) throws SQLException {
+        SQL_set_time_zone(stat);
+
+        String sql = MyProperties.instans().getProperty("SQL_get_Array_participants_from_participants_where_conversation_id", "66 ");
+        String sql_exe = String.format(sql, conversation_id);
+        Log.info(sql_exe);
+        ResultSet R = stat.executeQuery(sql_exe);
+        ArrayList<Myin> myinArrayList = new ArrayList<>();
+        while (R.next()) {
+            Participants participants = new Participants();
+            participants.setUsers_id(R.getInt("users_id"));
+            participants.setConversation_id(R.getInt("conversation_id"));
+            participants.setId_participants(R.getInt("id"));
+            myinArrayList.add(participants);
+        }
         R.close();
         return myinArrayList;
 
