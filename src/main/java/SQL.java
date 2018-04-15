@@ -576,6 +576,7 @@ public class SQL {
 
 
     private static int SQL_select_LAST_INSERT_ID(Statement stat) throws SQLException {
+        SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_LAST_INSERT_ID", "66 ");
 
         ResultSet R = stat.executeQuery(sql);
