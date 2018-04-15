@@ -14,12 +14,15 @@ public class Runnable_GET_ALL_CONVERSATION implements Runnable {
     private Connection con;
     private Statement stat;
 
-    public Runnable_GET_ALL_CONVERSATION(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db) throws SQLException {
+    private QueueTask QT;
+
+
+    public Runnable_GET_ALL_CONVERSATION(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db, QueueTask Q) throws SQLException {
         this.myXML = myXML;
         this.ctx = ctx;
         this.db = db;
         con = db.getConnection();
-
+        QT = Q;
     }
 
     @Override
@@ -27,7 +30,7 @@ public class Runnable_GET_ALL_CONVERSATION implements Runnable {
         try {
 
             Log.info("Runnable_GET_ALL_CONVERSATION");
-            Log.info(myXML.toString());
+            //Log.info(myXML.toString());
             con.setAutoCommit(false);
             stat = con.createStatement();
 

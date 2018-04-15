@@ -23,9 +23,11 @@ public class MyChannelInitializer extends ChannelInitializer<SocketChannel> {
         ch.pipeline().addLast("Base64Decoder", new Base64Decoder());
         ch.pipeline().addLast("Base64Encoder", new Base64Encoder());
 
-        ch.pipeline().addLast("StringDecoder", new StringDecoder());
+        //ch.pipeline().addLast("StringDecoder", new StringDecoder());
         ch.pipeline().addLast("StringEncoder", new StringEncoder());
 
-        ch.pipeline().addLast("My", new DecodeToTask(QT));
+        ch.pipeline().addLast("MyD", new DecodeToTask(QT));
+        //ch.pipeline().addLast("MyE", new MyencodeToByteBuf());
+
     }
 }

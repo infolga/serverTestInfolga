@@ -13,12 +13,15 @@ public class Runnable_CONTACT_ADD implements Runnable {
     private Connection con;
     private Statement stat;
 
-    public Runnable_CONTACT_ADD(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db) throws SQLException {
+    private QueueTask QT;
+
+
+    public Runnable_CONTACT_ADD(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db, QueueTask Q) throws SQLException {
         this.myXML = myXML;
         this.ctx = ctx;
         this.db = db;
         con = db.getConnection();
-
+        QT = Q;
     }
 
     @Override

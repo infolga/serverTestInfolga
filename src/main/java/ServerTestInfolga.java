@@ -1,18 +1,55 @@
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.Notification;
+import io.netty.channel.ChannelHandlerContext;
+
+import java.io.*;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 
 public class ServerTestInfolga {
-    public static Connection c;
-    public static Statement st;
+
 
     public static void main(String[] args) throws Exception {
         try {
+
+
+            FileInputStream serviceAccount = new FileInputStream("servertestinfolga-firebas.json");
+
+            FirebaseOptions options = new FirebaseOptions.Builder()
+                .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+                .setDatabaseUrl("https://servertestinfolga.firebaseio.com/")
+                .build();
+
+            FirebaseApp.initializeApp(options);
+
+
+            // This registration token comes from the client FCM SDKs.
+            String registrationToken = "f5bjAmunmzQ:APA91bHMfTjXDeJK4zrRE7iq1G0TVLzhUw5w8UTIk3sVP_IWndCOycmn1KcRA2MGVHFoCzXbEZz9ap4JuvEAwsymlrdbJhS4muQDTk13N8Pm8yw-fo6z4fycHYVK60tB2E39juy0HAON";
+            String registrationTok ="cEju2c2o0Hk:APA91bH6OFCh5j9vnNOFgcPqd0bbXSyFvefdv0kAyGBlToAe1QuytW9RnQr11AxG6hTKWrtPwBGgMwvUcdHTaPjTKkglGqIdLrRxogNfW6m4mEIE5iOC_hJjEd_p2rRMPIc_LmUD6xvo";
+            // See documentation on defining a message payload.
+            Message message = Message.builder()
+                .putData("score", "850")
+                .putData("time", "2:45")
+                .putData("time2", "2:45")
+
+                .setToken(registrationTok)
+                .setToken(registrationToken)
+
+                .setNotification(new Notification("пример","тест"))
+                .build();
+
+            System.out.println(message.toString());
+
+
+             String response = FirebaseMessaging.getInstance().sendAsync(message).get();
+
+             System.out.println("Successfully sent message: " + response);
+
 
             String url;
             String user;
@@ -31,20 +68,6 @@ public class ServerTestInfolga {
             System.out.println(user);
             System.out.println("psaa " + password);
 
-
-            c = DriverManager.getConnection(url,user,password);
-            st = c.createStatement();
-
-            ResultSet rs = st.executeQuery("SHOW DATABASES;");
-
-            while (rs.next()) {
-                System.out.println(rs.getString(1));
-            }
-
-            rs.close();
-            st.close();
-            c.close();
-
             DB = new PoolingDB(url, user, password);
 
             String PORT = MyProperties.instans().getProperty("port", "8080");
@@ -52,24 +75,19 @@ public class ServerTestInfolga {
             ST = new Server_Tetst(QT);
 
             QT.start(ST, DB, port);
-            System.out.println("redy");
-            QT.join();
+            System.out.println("ready");
 
 
-        } catch (
-            FileNotFoundException e)
 
-        {
+
+           // QT.join();
+
+
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } catch (
-            IOException e)
-
-        {
+        } catch (IOException e) {
             e.printStackTrace();
-        } catch (
-            InterruptedException e)
-
-        {
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
 

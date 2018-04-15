@@ -1,5 +1,4 @@
 import io.netty.channel.ChannelHandlerContext;
-import org.jdom2.Element;
 import org.mortbay.log.Log;
 
 import java.sql.Connection;
@@ -15,11 +14,15 @@ public class Runnable_GET_USER_FROM_LIKE implements Runnable {
     private Connection con;
     private Statement stat;
 
-    public Runnable_GET_USER_FROM_LIKE(MyXML myXMLParser, ChannelHandlerContext ctx, PoolingDB DB) throws SQLException {
-        this.myXML = myXMLParser;
+    private QueueTask QT;
+
+
+    public Runnable_GET_USER_FROM_LIKE(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db, QueueTask Q) throws SQLException {
+        this.myXML = myXML;
         this.ctx = ctx;
-        this.db = DB;
+        this.db = db;
         con = db.getConnection();
+        QT = Q;
     }
 
     @Override
@@ -30,7 +33,7 @@ public class Runnable_GET_USER_FROM_LIKE implements Runnable {
 
             Log.info("Runnable_GET_USER_FROM_LIKE");
 
-            Log.info(myXML.toString());
+           // Log.info(myXML.toString());
 
             con.setAutoCommit(false);
             stat = con.createStatement();
@@ -68,7 +71,7 @@ public class Runnable_GET_USER_FROM_LIKE implements Runnable {
 
 
             con.commit();
-            ctx.write( myXML.toString());
+            ctx.write(myXML.toString());
             ctx.flush();
 
 

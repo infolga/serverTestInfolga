@@ -15,5 +15,7 @@ public class MyEncoder extends MessageToMessageEncoder<ByteBuf> {
         ms.writeInt(count);
         out.add(copiedBuffer(ms, msg));
         //System.out.println("chek " + count);
+
+
     }
 }

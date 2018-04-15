@@ -13,12 +13,15 @@ public class Runnable_USER_REG implements Runnable {
     private Connection con;
     private Statement stat;
 
-    public Runnable_USER_REG(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db) throws SQLException {
+    private QueueTask QT;
+
+
+    public Runnable_USER_REG(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db, QueueTask Q) throws SQLException {
         this.myXML = myXML;
         this.ctx = ctx;
         this.db = db;
         con = db.getConnection();
-
+        QT = Q;
     }
 
     @Override

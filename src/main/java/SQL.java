@@ -101,7 +101,7 @@ public class SQL {
         Date created_at = new java.util.Date();
 
         String sql_exe = String.format(sql, phone, email, first_name, last_name, df.format(created_at));
-        System.out.println(sql_exe);
+        // System.out.println(sql_exe);
         stat.executeUpdate(sql_exe);
         return SQL_select_LAST_INSERT_ID(stat);
     }
@@ -235,6 +235,14 @@ public class SQL {
         return SQL_select_LAST_INSERT_ID(stat);
     }
 
+    public static void SQL_update_into_access(Statement stat, String token) throws SQLException {
+        SQL_set_time_zone(stat);
+
+        String sql = MyProperties.instans().getProperty("SQL_update_into_access", "66 ");
+        String sql_exe = String.format(sql, token);
+        stat.executeUpdate(sql_exe);
+    }
+
 
 //    public static int SQL_select_conversation_id_from_conversation_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at(Statement stat, String title, String name_conversation, int photo_id, String type, int creator_id, Date created_at) throws SQLException {
 //        SQL_set_time_zone(stat);
@@ -272,7 +280,6 @@ public class SQL {
         // System.out.println("SQL_insert_new_token ");
         Date created_at = new java.util.Date();
 
-        Calendar instance = Calendar.getInstance();
 
         String sql = MyProperties.instans().getProperty("SQL_insert_into_user_contact_user_id_contact_id_first_name_last_name_created_at_updated_at", "66 ");
         String sql_exe = String.format(sql, user_id, contact_id, first_name, last_name, df.format(created_at), df.format(created_at));
@@ -284,15 +291,53 @@ public class SQL {
 
     }
 
+    public static Messages SQL_insert_into_messages(Statement stat, Messages messages, Date created_at) throws SQLException {
+        SQL_set_time_zone(stat);
+        // System.out.println("SQL_insert_new_token ");
+
+
+        int conversation_id = messages.getConversation_id();
+        int sender_id = messages.getSender_id();
+        String message_type = messages.getMessage_type();
+        String message = messages.getMessage();
+        String attachment_thumb_url = messages.getAttachment_thumb_url();
+        String attachment_url = messages.getAttachment_url();
+        messages.setCreated_at(df.format(created_at));
+
+        String sql = MyProperties.instans().getProperty("SQL_insert_into_messages", "66 ");
+        String sql_exe = String.format(sql, conversation_id, sender_id, message_type, message, attachment_thumb_url, attachment_url, df.format(created_at));
+
+        //System.out.println(sql_exe);
+        stat.executeUpdate(sql_exe);
+        messages.setId(SQL_select_LAST_INSERT_ID(stat));
+        return messages;
+
+
+    }
+
     public static int SQL_select_user_id_contact_id_from_user_contact_where_users_id_contact_id(Statement stat, int user_id, int contact_id) throws SQLException {
         SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_user_id_contact_id_from_user_contact_where_users_id_contact_id", "66 ");
         // System.out.println("getDeviseIdToUsers ");
         String sql_exe = String.format(sql, user_id, contact_id);
-        System.out.println(sql_exe);
+        //System.out.println(sql_exe);
 
         ResultSet R = stat.executeQuery(sql_exe);
         return Return_id(R, "user_id");
+
+
+    }
+
+
+    public static int SQL_select_participant_id_from_participants_where_user_id_conversation_id(Statement stat, int user_id, int conversation_id) throws SQLException {
+        SQL_set_time_zone(stat);
+        String sql = MyProperties.instans().getProperty("SQL_select_participant_id_from_participants_where_user_id_conversation_id", "66 ");
+        //System.out.println("getDeviseIdToUsers ");
+        String sql_exe = String.format(sql, user_id, conversation_id);
+        // System.out.println(sql_exe);
+
+        ResultSet R = stat.executeQuery(sql_exe);
+        return Return_id(R, "id");
 
 
     }
@@ -303,7 +348,7 @@ public class SQL {
         String sql = MyProperties.instans().getProperty("SQL_get_common_conversation_id_single_where_users_id1_and_users_id2", "66 ");
         // System.out.println("getDeviseIdToUsers ");
         String sql_exe = String.format(sql, user_id, user_id2);
-        System.out.println(sql_exe);
+        // System.out.println(sql_exe);
 
         ResultSet R = stat.executeQuery(sql_exe);
         return Return_id(R, "id");
@@ -323,7 +368,7 @@ public class SQL {
 
         String sql = MyProperties.instans().getProperty("SQL_get_Array_users_from_users_like", "66 ");
         String sql_exe = String.format(sql, "%" + user_name_like + "%", Integer.toString(afte), Integer.toString(before - afte + 1));
-        Log.info(sql_exe);
+        // Log.info(sql_exe);
         ResultSet R = stat.executeQuery(sql_exe);
 
         ArrayList<User> arrayusers = new ArrayList<User>();
@@ -349,7 +394,7 @@ public class SQL {
 
         String sql = MyProperties.instans().getProperty("SQL_select_first_15_participants_in_each_conversation_where_user_id", "66 ");
         String sql_exe = String.format(sql, user_id);
-        Log.info(sql_exe);
+        // Log.info(sql_exe);
         ResultSet R = stat.executeQuery(sql_exe);
 
         ArrayList<Myin> arrayusers = new ArrayList<>();
@@ -381,7 +426,7 @@ public class SQL {
 
         String sql = MyProperties.instans().getProperty("SQL_select_all_from_users_where_users_id", "66 ");
         String sql_exe = String.format(sql, user_id);
-        Log.info(sql_exe);
+        // Log.info(sql_exe);
         ResultSet R = stat.executeQuery(sql_exe);
 
 
@@ -406,7 +451,7 @@ public class SQL {
 
         String sql = MyProperties.instans().getProperty("SQL_select_ALL_conversation", "66 ");
         String sql_exe = String.format(sql, user_id);
-        Log.info(sql_exe);
+        // Log.info(sql_exe);
         ResultSet R = stat.executeQuery(sql_exe);
         ArrayList<Myin> myinArrayList = new ArrayList<>();
         while (R.next()) {
@@ -456,20 +501,72 @@ public class SQL {
     }
 
 
-    public static ArrayList<Myin> SQL_get_Array_participants_from_participants_where_conversation_id(Statement stat, int conversation_id) throws SQLException {
+    public static ArrayList<Myin> SQL_get_Array_messages_from_messagess_where_conversation_id_date_limit(Statement stat, int conversation_id, String date, int mess_id, int count) throws SQLException {
+        SQL_set_time_zone(stat);
+
+        String sql = MyProperties.instans().getProperty("SQL_get_Array_messages_from_messagess_where_conversation_id_date_limit", "66 ");
+        String sql_exe = String.format(sql, conversation_id, mess_id, date, count);
+        Log.info(sql_exe);
+        ResultSet R = stat.executeQuery(sql_exe);
+        ArrayList<Myin> myinArrayList = new ArrayList<>();
+
+        while (R.next()) {
+            Messages messages = new Messages();
+            messages.setConversation_id(R.getInt("conversation_id"));
+
+            messages.setId(R.getInt("id"));
+            messages.setSender_id(R.getInt("sender_id"));
+            messages.setMessage_type(R.getString("message_type"));
+            messages.setMessage(R.getString("message"));
+            messages.setAttachment_thumb_url(R.getString("attachment_thumb_url"));
+            messages.setAttachment_url(R.getString("attachment_url"));
+            messages.setCreated_at(R.getString("created_at"));
+            myinArrayList.add(messages);
+        }
+
+        R.close();
+        return myinArrayList;
+
+
+    }
+
+
+    public static ArrayList<Participants> SQL_get_Array_participants_from_participants_where_conversation_id(Statement stat, int conversation_id) throws SQLException {
         SQL_set_time_zone(stat);
 
         String sql = MyProperties.instans().getProperty("SQL_get_Array_participants_from_participants_where_conversation_id", "66 ");
         String sql_exe = String.format(sql, conversation_id);
-        Log.info(sql_exe);
+        //Log.info(sql_exe);
         ResultSet R = stat.executeQuery(sql_exe);
-        ArrayList<Myin> myinArrayList = new ArrayList<>();
+        ArrayList<Participants> myinArrayList = new ArrayList<>();
         while (R.next()) {
             Participants participants = new Participants();
             participants.setUsers_id(R.getInt("users_id"));
             participants.setConversation_id(R.getInt("conversation_id"));
             participants.setId_participants(R.getInt("id"));
             myinArrayList.add(participants);
+        }
+        R.close();
+        return myinArrayList;
+
+
+    }
+
+
+    public static ArrayList<User_token> SQL_get_Array_users_id_token_device_token(Statement stat, int conversation_id) throws SQLException {
+        SQL_set_time_zone(stat);
+
+        String sql = MyProperties.instans().getProperty("SQL_get_Array_users_id_token_device_token", "66 ");
+        String sql_exe = String.format(sql, conversation_id);
+        //Log.info(sql_exe);
+        ResultSet R = stat.executeQuery(sql_exe);
+        ArrayList<User_token> myinArrayList = new ArrayList<>();
+        while (R.next()) {
+            User_token user_token = new User_token();
+            user_token.users_id = R.getInt("users_id");
+            user_token.token = R.getString("token");
+            user_token.device_token= R.getString("device_token");
+            myinArrayList.add(user_token);
         }
         R.close();
         return myinArrayList;

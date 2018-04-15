@@ -2,7 +2,6 @@ import io.netty.channel.ChannelHandlerContext;
 import org.mortbay.log.Log;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
@@ -14,11 +13,15 @@ public class Runnable_USER_LOGIN implements Runnable {
     private Connection con;
     private Statement stat;
 
-    public Runnable_USER_LOGIN(MyXML myXMLParser, ChannelHandlerContext ctx, PoolingDB DB) throws SQLException {
-        this.myXML = myXMLParser;
+    private QueueTask QT;
+
+
+    public Runnable_USER_LOGIN(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db, QueueTask Q) throws SQLException {
+        this.myXML = myXML;
         this.ctx = ctx;
-        this.db = DB;
+        this.db = db;
         con = db.getConnection();
+        QT = Q;
     }
 
     @Override
@@ -48,8 +51,8 @@ public class Runnable_USER_LOGIN implements Runnable {
                     int devices_id = SQL.SQL_select_devises_id_from_devices_where_users_id_device_token(stat, user_id, device_token);
                     //проверка наличия этого устройства в бд
                     if (devices_id == -1) {
-                        devices_id=SQL.SQL_insert_into_devices_users_id_device_info_device_token(stat, user_id, device_info, device_token);
-                       // devices_id = SQL.SQL_select_devises_id_from_devices_where_users_id_device_token(stat, user_id, device_token);
+                        devices_id = SQL.SQL_insert_into_devices_users_id_device_info_device_token(stat, user_id, device_info, device_token);
+                        // devices_id = SQL.SQL_select_devises_id_from_devices_where_users_id_device_token(stat, user_id, device_token);
                     }
                     //поиск валидного токена
                     String token = SQL.SQL_select_valid_token_from_access_where_users_id_devices_id(stat, user_id, devices_id);
@@ -77,7 +80,8 @@ public class Runnable_USER_LOGIN implements Runnable {
 
             }
             con.commit();
-            ctx.write(myXML.toString());
+             ctx.write(myXML.toString());
+            //ctx.write( new byte[5]);
             ctx.flush();
 
 

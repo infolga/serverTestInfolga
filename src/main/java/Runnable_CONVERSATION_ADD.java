@@ -17,12 +17,15 @@ public class Runnable_CONVERSATION_ADD implements Runnable {
     private Connection con;
     private Statement stat;
 
-    public Runnable_CONVERSATION_ADD(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db) throws SQLException {
+    private QueueTask QT;
+
+
+    public Runnable_CONVERSATION_ADD(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db, QueueTask Q) throws SQLException {
         this.myXML = myXML;
         this.ctx = ctx;
         this.db = db;
         con = db.getConnection();
-
+        QT = Q;
     }
 
     @Override
@@ -54,8 +57,8 @@ public class Runnable_CONVERSATION_ADD implements Runnable {
                     Date created_at = new java.util.Date();
 
                     if (conv_id == -1) {
-                        conv_id=SQL.SQL_insert_into_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at(stat, title, name_conversation, 0, type, user_id, created_at);
-                       // conv_id = SQL.SQL_select_conversation_id_from_conversation_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at(stat, title, "", 0, type, user_id, created_at);
+                        conv_id = SQL.SQL_insert_into_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at(stat, title, name_conversation, 0, type, user_id, created_at);
+                        // conv_id = SQL.SQL_select_conversation_id_from_conversation_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at(stat, title, "", 0, type, user_id, created_at);
                         SQL.SQL_insert_into_participants_conversation_id_users_id(stat, conv_id, user_id);
                         SQL.SQL_insert_into_participants_conversation_id_users_id(stat, conv_id, Integer.parseInt(user_id2));
                     }
@@ -68,7 +71,7 @@ public class Runnable_CONVERSATION_ADD implements Runnable {
                     myXML.setAtribute(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
                     myXML.addChildElement(conversation.getXMLElement());
 
-                    ArrayList<Myin> myins = SQL.SQL_get_Array_participants_from_participants_where_conversation_id(stat, conv_id);
+                    ArrayList< Participants> myins = SQL.SQL_get_Array_participants_from_participants_where_conversation_id(stat, conv_id);
                     for (int i = 0; i < myins.size(); i++) {
                         myXML.addChildElement(myins.get(i).getXMLElement());
                     }

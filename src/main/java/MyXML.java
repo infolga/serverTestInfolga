@@ -7,6 +7,7 @@ import org.jdom2.output.Format;
 import org.jdom2.output.XMLOutputter;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -21,6 +22,16 @@ public class MyXML {
     public MyXML(String str) throws JDOMException, IOException {
 
         InputStream is = new ByteArrayInputStream(str.getBytes());
+        SAXBuilder saxBuilder = new SAXBuilder();
+        doc = saxBuilder.build(is);
+        root = doc.getRootElement();
+        buf = root;
+    }
+
+
+    public MyXML(byte[] bytes) throws JDOMException, IOException {
+
+        InputStream is = new ByteArrayInputStream(bytes);
         SAXBuilder saxBuilder = new SAXBuilder();
         doc = saxBuilder.build(is);
         root = doc.getRootElement();
@@ -55,8 +66,17 @@ public class MyXML {
                 buf.setAttribute("id", "" + MSG.XML_CONVERSATION_ADD);
                 buf.addContent(new Comment("conversation.add"));
                 break;
+            case MSG.XML_GET_ALL_CONVERSATION:
+                buf.setAttribute("id", "" + MSG.XML_GET_ALL_CONVERSATION);
+                buf.addContent(new Comment("conversation.get"));
+                break;
+            case MSG.XML_GET_MESSAGES_FO_DATE:
+                buf.setAttribute("id", "" + MSG.XML_GET_MESSAGES_FO_DATE);
+                buf.addContent(new Comment("message.get"));
+                break;
 
             default:
+                buf.setAttribute("id", "" + Actionid);
                 break;
         }
     }
@@ -82,6 +102,11 @@ public class MyXML {
         return buf.getChildren(name);
     }
 
+    public MyXML removeChild(String name) {
+        buf.removeChild(name);
+        return this;
+    }
+
     public Element getCildElement(String name) {
         buf = root.getChild("actions");
         return buf.getChild(name);
@@ -95,7 +120,7 @@ public class MyXML {
             return buf.getText();
 
         } else {
-            return "";
+            return null;
         }
 
     }
@@ -185,9 +210,22 @@ public class MyXML {
         if (d == null) {
             d = new Document(root);
         }
-
-
         return (new XMLOutputter(Format.getPrettyFormat())).outputString(d);
+    }
+
+    public byte[] toByteArray()     {
+        Document d = root.getDocument();
+        if (d == null) {
+            d = new Document(root);
+        }
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+            (new XMLOutputter(Format.getPrettyFormat())).output(d, bos);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return bos.toByteArray();
     }
 
 
