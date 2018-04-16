@@ -1,3 +1,0 @@
-jdbc:mysql://test-db.ckhxvp0gw6hm.us-west-2.rds.amazonaws.com:3306/messenger?useUnicode=true&characterEncoding=utf8
-test_server
-123456789
