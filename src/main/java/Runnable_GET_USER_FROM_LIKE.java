@@ -59,7 +59,7 @@ public class Runnable_GET_USER_FROM_LIKE implements Runnable {
                 for (int i = 0; i < users.size(); i++) {
                     myXML.addChildElement(users.get(i).getXMLElement());
                 }
-                Log.info(myXML.toString());
+              //  Log.info(myXML.toString());
 
 
             } else {

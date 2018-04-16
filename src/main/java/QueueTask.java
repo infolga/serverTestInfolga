@@ -85,7 +85,7 @@ public class QueueTask {
                         }
                       // System.out.println(conectList.size());
 
-                        Log.info("PACKEGE_MSG", "PACKEGE_MSG" +myXMLParser.getTypeXML() );
+                        //Log.info("PACKEGE_MSG", "PACKEGE_MSG" +myXMLParser.getTypeXML() );
                         if (MSG.XML_TYPE_REQUEST.equals(myXMLParser.getTypeXML())) {
                             switch (myXMLParser.getIdActionsXML()) {
                                 case MSG.XML_USER_LOGIN:

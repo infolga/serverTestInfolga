@@ -18,6 +18,7 @@ public class ServerTestInfolga {
         try {
 
 
+
             FileInputStream serviceAccount = new FileInputStream("servertestinfolga-firebas.json");
 
             FirebaseOptions options = new FirebaseOptions.Builder()
@@ -28,27 +29,28 @@ public class ServerTestInfolga {
             FirebaseApp.initializeApp(options);
 
 
-            // This registration token comes from the client FCM SDKs.
-            String registrationToken = "f5bjAmunmzQ:APA91bHMfTjXDeJK4zrRE7iq1G0TVLzhUw5w8UTIk3sVP_IWndCOycmn1KcRA2MGVHFoCzXbEZz9ap4JuvEAwsymlrdbJhS4muQDTk13N8Pm8yw-fo6z4fycHYVK60tB2E39juy0HAON";
-            String registrationTok ="cEju2c2o0Hk:APA91bH6OFCh5j9vnNOFgcPqd0bbXSyFvefdv0kAyGBlToAe1QuytW9RnQr11AxG6hTKWrtPwBGgMwvUcdHTaPjTKkglGqIdLrRxogNfW6m4mEIE5iOC_hJjEd_p2rRMPIc_LmUD6xvo";
-            // See documentation on defining a message payload.
-            Message message = Message.builder()
-                .putData("score", "850")
-                .putData("time", "2:45")
-                .putData("time2", "2:45")
-
-                .setToken(registrationTok)
-                .setToken(registrationToken)
-
-                .setNotification(new Notification("пример","тест"))
-                .build();
-
-            System.out.println(message.toString());
-
-
-             String response = FirebaseMessaging.getInstance().sendAsync(message).get();
-
-             System.out.println("Successfully sent message: " + response);
+//            // This registration token comes from the client FCM SDKs.
+//            String registrationToken = "f5bjAmunmzQ:APA91bHMfTjXDeJK4zrRE7iq1G0TVLzhUw5w8UTIk3sVP_IWndCOycmn1KcRA2MGVHFoCzXbEZz9ap4JuvEAwsymlrdbJhS4muQDTk13N8Pm8yw-fo6z4fycHYVK60tB2E39juy0HAON";
+//            //String registrationTok ="drQiuaLXn0Q:APA91bG6iWjR_UZvRBsszYrLonbMPdX94gq3LrRim_FFBAfrDOZ3_BlE13HlAjtSAC0qKLYNHTuKsFZD2UF_tlkRiZSCEs4C5c1R1iyhn98yhDlm5RyQc_KwevR7f6kgqtfUOCc8tWQl";
+//            // See documentation on defining a message payload.
+//            Message message = Message.builder()
+//                .putData("title", "title123")
+//                .putData("body", "body123")
+//
+//                //.setNotification(new Notification("тест ", "ХА ХА?"))
+//
+//                // .setToken(registrationTok)
+//                .setToken(registrationToken)
+//
+//
+//                .build();
+//
+//            System.out.println(message.toString());
+//
+//
+//             String response = FirebaseMessaging.getInstance().sendAsync(message).get();
+//
+//             System.out.println("Successfully sent message: " + response);
 
 
             String url;

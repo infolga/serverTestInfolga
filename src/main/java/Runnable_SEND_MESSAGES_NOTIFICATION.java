@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
 
@@ -30,7 +31,7 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
 
             Log.info("Runnable_SEND_MESSAGES_NOTIFICATION");
 
-            con.setAutoCommit(false);
+
             stat = con.createStatement();
 
             int conversation_id = messages.getConversation_id();
@@ -39,29 +40,58 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
             MyXML myXML = new MyXML(MSG.XML_TYPE_RESPONSE, MSG.XML_ADD_MESSAGES);
             myXML.setAttributeRoot(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
             myXML.jumpToChildFromRoot(MSG.XML_ELEMENT_ACTIONS);
-
             myXML.setAtribute(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
             myXML.addChildElement(messages.getXMLElement());
 
+
             Message.Builder builder = Message.builder();
+
+            User user = SQL.SQL_get_users_from_users_where_id(stat, messages.getSender_id());
+
+
+            builder.putData("id", Integer.toString(messages.getId()))
+                .putData("id", Integer.toString(messages.getId()))
+                .putData("conversation_id", Integer.toString(messages.getConversation_id()))
+                .putData("sender_id", Integer.toString(messages.getSender_id()))
+                .putData("message_type2", messages.getMessage_type())
+                .putData("message", messages.getMessage())
+                .putData("attachment_thumb_url", messages.getAttachment_thumb_url())
+                .putData("attachment_url", messages.getAttachment_url())
+                .putData("created_at", messages.getCreated_at())
+                .putData("us_FL_name", user.getFirst_name() + " " + user.getLast_name());
+
 
             for (int i = 0; i < list.size(); i++) {
 
                 ChannelHandlerContext channelHandlerContext = conectList.get(list.get(i).token);
 
-                if (channelHandlerContext != null) {
-                    channelHandlerContext.write(myXML.toString());
-                    channelHandlerContext.flush();
-                } else {
 
+                if (channelHandlerContext != null) {
+                    if (channelHandlerContext.channel().isActive()) {
+                        channelHandlerContext.write(myXML.toString());
+                        channelHandlerContext.flush();
+                    } else {
+
+                        System.out.println(list.get(i).device_token);
+                        builder.setToken(list.get(i).device_token);
+                    }
+                } else {
+                    System.out.println(list.get(i).device_token);
+                    builder.setToken(list.get(i).device_token);
                 }
 
             }
 
+            Message mess = builder.build();
+            try {
+                System.out.println(FirebaseMessaging.getInstance().sendAsync(mess).get());
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
 
-
-          //  FirebaseMessaging.getInstance().sendAsync(message).get();
-            con.commit();
+            //  FirebaseMessaging.getInstance().sendAsync(message).get();
 
 
         } catch (SQLException e) {
@@ -82,7 +112,7 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
             }
             try {
                 if (con != null) {
-                    con.setAutoCommit(true);
+
                     con.close();
                 }
             } catch (SQLException e) {

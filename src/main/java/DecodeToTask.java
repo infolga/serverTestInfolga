@@ -14,11 +14,11 @@ public class DecodeToTask extends SimpleChannelInboundHandler {
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
 
-          Log.info("channelRead0"+ctx.toString());
+          //Log.info("channelRead0  "+ctx.toString());
 
           byte[] b = new byte[((ByteBuf) msg ).readableBytes()];
         ((ByteBuf) msg ).readBytes(b);
-        Log.info("leng  "+ b.length );
+       // Log.info("leng  "+ b.length );
          //Log.info("leng  "+ ((ByteBuf)msg).array().length);
         MyTask task = new MyTask( b, ctx, MyTask.PACKEGE_MSG);
         QT.addTask(task);
@@ -35,14 +35,14 @@ public class DecodeToTask extends SimpleChannelInboundHandler {
     @Override
     public void channelRegistered(ChannelHandlerContext ctx) throws Exception {
         super.channelRegistered(ctx);
-          Log.info("Registered" + ctx.toString());
+        //  Log.info("Registered" + ctx.toString());
        // System.out.println("channelRegistered");
     }
 
     @Override
     public void channelUnregistered(ChannelHandlerContext ctx) throws Exception {
         super.channelUnregistered(ctx);
-        Log.info("Unregistered" + ctx.toString());
+       // Log.info("Unregistered" + ctx.toString());
        // System.out.println("channelUnregistered");
     }
 
@@ -72,7 +72,7 @@ public class DecodeToTask extends SimpleChannelInboundHandler {
     @Override
     public void channelWritabilityChanged(ChannelHandlerContext ctx) throws Exception {
         super.channelWritabilityChanged(ctx);
-         Log.info("WritabilityChanged" + ctx.toString());
+        // Log.info("WritabilityChanged" + ctx.toString());
       //  System.out.println("channelWritabilityChanged");
     }
 }

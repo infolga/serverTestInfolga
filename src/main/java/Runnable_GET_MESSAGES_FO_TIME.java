@@ -29,7 +29,7 @@ public class Runnable_GET_MESSAGES_FO_TIME implements Runnable {
         try {
 
             Log.info("Runnable_GET_MESSAGES_FO_TIME");
-            //Log.info(myXML.toString());
+            Log.info(myXML.toString());
             con.setAutoCommit(false);
             stat = con.createStatement();
 
@@ -80,7 +80,7 @@ public class Runnable_GET_MESSAGES_FO_TIME implements Runnable {
 
             con.commit();
 
-           // System.out.println(myXML.toString());
+            System.out.println(myXML.toString());
 
             ctx.write(myXML.toString());
             ctx.flush();

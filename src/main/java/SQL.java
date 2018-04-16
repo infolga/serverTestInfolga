@@ -237,9 +237,11 @@ public class SQL {
 
     public static void SQL_update_into_access(Statement stat, String token) throws SQLException {
         SQL_set_time_zone(stat);
+        Date created_at = new java.util.Date();
+
 
         String sql = MyProperties.instans().getProperty("SQL_update_into_access", "66 ");
-        String sql_exe = String.format(sql, token);
+        String sql_exe = String.format(sql, df.format(created_at), token);
         stat.executeUpdate(sql_exe);
     }
 
@@ -480,7 +482,6 @@ public class SQL {
             R.getInt("mes_id");
             if (!R.wasNull()) {
                 messages.setConversation_id(R.getInt("con_id"));
-                Log.info(Integer.toString(R.getInt("mes_id")));
                 messages.setId(R.getInt("mes_id"));
                 messages.setSender_id(R.getInt("mes_sender_id"));
                 messages.setMessage_type(R.getString("mes_message_type"));
@@ -506,7 +507,7 @@ public class SQL {
 
         String sql = MyProperties.instans().getProperty("SQL_get_Array_messages_from_messagess_where_conversation_id_date_limit", "66 ");
         String sql_exe = String.format(sql, conversation_id, mess_id, date, count);
-        Log.info(sql_exe);
+       //Log.info(sql_exe);
         ResultSet R = stat.executeQuery(sql_exe);
         ArrayList<Myin> myinArrayList = new ArrayList<>();
 
