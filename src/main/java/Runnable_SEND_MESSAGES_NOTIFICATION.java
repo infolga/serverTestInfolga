@@ -78,8 +78,8 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
 
             Message.Builder builder = Message.builder();
             builder
-               // .setNotification(new Notification(user.getFirst_name() + " " + user.getLast_name(), messages.getMessage()))
-                .setNotification( new Notification("тест ", "ХА ХА?"));
+                .setNotification(new Notification(user.getFirst_name() + " " + user.getLast_name(), messages.getMessage()))
+                //.setNotification( new Notification("тест ", "ХА ХА?"));
             ;
 
             for (int i = 0; i < list.size(); i++) {
