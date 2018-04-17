@@ -1,7 +1,4 @@
-import com.google.firebase.messaging.AndroidConfig;
-import com.google.firebase.messaging.AndroidNotification;
-import com.google.firebase.messaging.FirebaseMessaging;
-import com.google.firebase.messaging.Message;
+import com.google.firebase.messaging.*;
 import io.netty.channel.ChannelHandlerContext;
 import org.mortbay.log.Log;
 
@@ -51,32 +48,35 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
             User user = SQL.SQL_get_users_from_users_where_id(stat, messages.getSender_id());
 
             builder
-                .setAndroidConfig(AndroidConfig.builder()
-                    //.setTtl(3600 * 1000) // 1 hour in milliseconds
-                    .setPriority(AndroidConfig.Priority.NORMAL)
-                    .setNotification(AndroidNotification.builder()
-                        .setTitle( user.getFirst_name() + " " + user.getLast_name())
-                        .setBody(messages.getMessage())
-                        // .setIcon("stock_ticker_update")
-                        .setColor("#f45342")
-                        .build())
-                    .build());
+                .setNotification(new Notification(user.getFirst_name() + " " + user.getLast_name(), messages.getMessage()));
+
+
+//                .setAndroidConfig(AndroidConfig.builder()
+//                    //.setTtl(3600 * 1000) // 1 hour in milliseconds
+//                    .setPriority(AndroidConfig.Priority.NORMAL)
+//                    .setNotification(AndroidNotification.builder()
+//                        .setTitle( user.getFirst_name() + " " + user.getLast_name())
+//                        .setBody(messages.getMessage())
+//                        // .setIcon("stock_ticker_update")
+//                        .setColor("#f45342")
+//                        .build())
+//                    .build());
 
 
 
 
 
-            builder.putData("id", Integer.toString(messages.getId()))
-                .putData("id", Integer.toString(messages.getId()))
-                .putData("conversation_id", Integer.toString(messages.getConversation_id()))
-                .putData("sender_id", Integer.toString(messages.getSender_id()))
-                .putData("message_type2", messages.getMessage_type())
-                .putData("message", messages.getMessage())
-                .putData("attachment_thumb_url", messages.getAttachment_thumb_url())
-                .putData("attachment_url", messages.getAttachment_url())
-                .putData("created_at", messages.getCreated_at())
-                .putData("us_FL_name", user.getFirst_name() + " " + user.getLast_name())
-            ;
+//            builder.putData("id", Integer.toString(messages.getId()))
+//                .putData("id", Integer.toString(messages.getId()))
+//                .putData("conversation_id", Integer.toString(messages.getConversation_id()))
+//                .putData("sender_id", Integer.toString(messages.getSender_id()))
+//                .putData("message_type2", messages.getMessage_type())
+//                .putData("message", messages.getMessage())
+//                .putData("attachment_thumb_url", messages.getAttachment_thumb_url())
+//                .putData("attachment_url", messages.getAttachment_url())
+//                .putData("created_at", messages.getCreated_at())
+//                .putData("us_FL_name", user.getFirst_name() + " " + user.getLast_name())
+//            ;
 
 
             for (int i = 0; i < list.size(); i++) {
