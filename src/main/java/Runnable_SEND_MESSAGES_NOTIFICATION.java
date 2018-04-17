@@ -1,3 +1,5 @@
+import com.google.firebase.messaging.AndroidConfig;
+import com.google.firebase.messaging.AndroidNotification;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import io.netty.channel.ChannelHandlerContext;
@@ -48,6 +50,21 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
 
             User user = SQL.SQL_get_users_from_users_where_id(stat, messages.getSender_id());
 
+            builder
+                .setAndroidConfig(AndroidConfig.builder()
+                    //.setTtl(3600 * 1000) // 1 hour in milliseconds
+                    .setPriority(AndroidConfig.Priority.NORMAL)
+                    .setNotification(AndroidNotification.builder()
+                        .setTitle( user.getFirst_name() + " " + user.getLast_name())
+                        .setBody(messages.getMessage())
+                        // .setIcon("stock_ticker_update")
+                        .setColor("#f45342")
+                        .build())
+                    .build());
+
+
+
+
 
             builder.putData("id", Integer.toString(messages.getId()))
                 .putData("id", Integer.toString(messages.getId()))
@@ -58,7 +75,8 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
                 .putData("attachment_thumb_url", messages.getAttachment_thumb_url())
                 .putData("attachment_url", messages.getAttachment_url())
                 .putData("created_at", messages.getCreated_at())
-                .putData("us_FL_name", user.getFirst_name() + " " + user.getLast_name());
+                .putData("us_FL_name", user.getFirst_name() + " " + user.getLast_name())
+            ;
 
 
             for (int i = 0; i < list.size(); i++) {
@@ -71,6 +89,7 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
                         channelHandlerContext.write(myXML.toString());
                         channelHandlerContext.flush();
                     } else {
+                        conectList.remove(list.get(i).token);
 
                         System.out.println(list.get(i).device_token);
                         builder.setToken(list.get(i).device_token);
