@@ -80,7 +80,7 @@ public class Runnable_GET_MESSAGES_FO_TIME implements Runnable {
 
             con.commit();
 
-            System.out.println(myXML.toString());
+            //System.out.println(myXML.toString());
 
             ctx.write(myXML.toString());
             ctx.flush();
