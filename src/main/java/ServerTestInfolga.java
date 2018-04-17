@@ -15,7 +15,7 @@ public class ServerTestInfolga {
     public static void main(String[] args) throws Exception {
         try {
 
-            FileInputStream serviceAccount = new FileInputStream("servertestinfolga-firebase.json");
+            FileInputStream serviceAccount = new FileInputStream("servertestinfolga-firebas.json");
 
             FirebaseOptions options = new FirebaseOptions.Builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
