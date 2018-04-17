@@ -43,12 +43,10 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
             myXML.addChildElement(messages.getXMLElement());
 
 
-            Message.Builder builder = Message.builder();
+
 
             User user = SQL.SQL_get_users_from_users_where_id(stat, messages.getSender_id());
 
-            builder
-                .setNotification(new Notification(user.getFirst_name() + " " + user.getLast_name(), messages.getMessage()));
 
 
 //                .setAndroidConfig(AndroidConfig.builder()
@@ -78,6 +76,11 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
 //                .putData("us_FL_name", user.getFirst_name() + " " + user.getLast_name())
 //            ;
 
+            Message.Builder builder = Message.builder();
+            builder
+               // .setNotification(new Notification(user.getFirst_name() + " " + user.getLast_name(), messages.getMessage()))
+                .setNotification( new Notification("тест ", "ХА ХА?"));
+            ;
 
             for (int i = 0; i < list.size(); i++) {
 
@@ -96,7 +99,7 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
                     }
                 } else {
                     System.out.println(list.get(i).device_token);
-                    builder.setToken(list.get(i).device_token);
+                        builder.setToken(list.get(i).device_token);
                 }
 
             }
