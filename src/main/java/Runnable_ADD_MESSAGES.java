@@ -46,7 +46,7 @@ public class Runnable_ADD_MESSAGES implements Runnable {
                 int participant_id = SQL.SQL_select_participant_id_from_participants_where_user_id_conversation_id(stat, user_id, messages.getConversation_id());
                 if (participant_id != -1) {// пользоветель состоит в этой беседе
 
-                    Date created_at = new java.util.Date();
+                    Date created_at = SQL.getInstansInGreenwich().getTime();
 
                     messages.setSender_id(user_id);
                     messages = SQL.SQL_insert_into_messages(stat, messages, created_at);

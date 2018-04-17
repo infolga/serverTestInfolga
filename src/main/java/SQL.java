@@ -1,5 +1,4 @@
 import org.apache.commons.codec.binary.Base64;
-import org.mortbay.log.Log;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,15 +13,25 @@ import java.util.TimeZone;
 public class SQL {
 
 
-    static {
-        (calendar = Calendar.getInstance()).setTimeZone(TimeZone.getTimeZone("Europe/Kiev"));
+    public final static String timeZone = Calendar.getInstance().getTimeZone().getID();
+    public static final DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
+    public static Calendar  getInstansInGreenwich(){
+        Calendar time = Calendar.getInstance();
+        time.add(Calendar.MILLISECOND, -time.getTimeZone().getOffset(time.getTimeInMillis()));
+        return time;
     }
 
-    public final static Calendar calendar;
+//    private static void SQL_set_time_zone(Statement stat) throws SQLException {
+//        String sql = MyProperties.instans().getProperty("SQL_set_time_zone", "66 ");
+//
+//        String sql_exe = String.format(sql, "+00:00");
+//        stat.execute(sql_exe);
+//
+//    }
 
 
-    public static final DateFormat df = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
+
 
     public static int countRow(ResultSet R) throws SQLException {
         int size = 0;
@@ -33,7 +42,7 @@ public class SQL {
     }
 
     public static int SQL_select_users_id_from_users_where_phone_password(Statement stat, String phone, String password) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_users_id_from_users_where_phone_password", "66 ");
 
         String sql_exe = String.format(sql, phone, password);
@@ -44,7 +53,7 @@ public class SQL {
 
 
     public static int SQL_select_users_id_from_access_where_token(Statement stat, String token) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_users_id_from_access_where_token", "66 ");
 
         String sql_exe = String.format(sql, token);
@@ -55,7 +64,7 @@ public class SQL {
 
 
     public static int SQL_select_users_id_from_users_where_user_name(Statement stat, String user_name) throws SQLException {
-        SQL_set_time_zone(stat);
+       // SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_users_id_from_users_where_user_name", "66 ");
         String sql_exe = String.format(sql, user_name);
         ResultSet R = stat.executeQuery(sql_exe);
@@ -65,11 +74,11 @@ public class SQL {
 
 
     public static int SQL_insert_into_users_phone_email_password_first_name_last_name_user_name_created_at_(Statement stat, String phone, String email, String password, String first_name, String last_name, String user_name) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_insert_into_users_phone_email_password_first_name_last_name_user_name_created_at_", "66 ");
-        Date created_at = new java.util.Date();
+        Date created_at = getInstansInGreenwich().getTime();
 
-        Calendar instance = Calendar.getInstance();
+        Calendar instance = getInstansInGreenwich();
         instance.setTime(created_at); //устанавливаем дату, с которой будет производить операции
         instance.add(Calendar.YEAR, -1);//
         Date valid_ = instance.getTime();
@@ -83,10 +92,10 @@ public class SQL {
 
 
     public static int SQL_insert_into_participants_conversation_id_users_id(Statement stat, int conversation_id, int users_id) throws SQLException {
-        SQL_set_time_zone(stat);
+      //  SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_insert_into_participants_conversation_id_users_id", "66 ");
 
-        Date created_at = new java.util.Date();
+        Date created_at =getInstansInGreenwich().getTime();
 
         String sql_exe = String.format(sql, conversation_id, users_id, df.format(created_at));
         stat.executeUpdate(sql_exe);
@@ -95,10 +104,10 @@ public class SQL {
 
 
     public static int SQL_insert_into_contacts_phone_email_first_name_last_name_created_at(Statement stat, String phone, String email, String first_name, String last_name) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_insert_into_contacts_phone_email_first_name_last_name_created_at", "66 ");
 
-        Date created_at = new java.util.Date();
+        Date created_at = getInstansInGreenwich().getTime();
 
         String sql_exe = String.format(sql, phone, email, first_name, last_name, df.format(created_at));
         // System.out.println(sql_exe);
@@ -108,7 +117,7 @@ public class SQL {
 
 
     public static void SQL_update_contacts_set_email_first_name_last_name_where_contacts_id(Statement stat, String email, String first_name, String last_name, int contacts_id) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_update_contacts_set_email_first_name_last_name_where_contacts_id", "66 ");
 
         String sql_exe = String.format(sql, email, first_name, last_name, contacts_id);
@@ -118,7 +127,7 @@ public class SQL {
 
 
     public static int SQL_select_users_id_from_users_where_phone(Statement stat, String phone) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_users_id_from_users_where_phone", "66 ");
         String sql_exe = String.format(sql, phone);
         ResultSet R = stat.executeQuery(sql_exe);
@@ -128,7 +137,7 @@ public class SQL {
 
 
     public static Conversation SQL_select_conversation_all_from_conversation_where_conversation_id_users_id(Statement stat, int conversation_id, int user_id) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_conversation_all_from_conversation_where_conversation_id_users_id", "66 ");
         String sql_exe = String.format(sql, conversation_id, user_id);
         ResultSet R = stat.executeQuery(sql_exe);
@@ -151,7 +160,7 @@ public class SQL {
 
 
     public static int SQL_select_contacts_id_from_contacts_where_phone(Statement stat, String phone) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_contacts_id_from_contacts_where_phone", "66 ");
         String sql_exe = String.format(sql, phone);
         ResultSet R = stat.executeQuery(sql_exe);
@@ -162,7 +171,7 @@ public class SQL {
 
 
     public static int SQL_select_devises_id_from_devices_where_users_id_device_token(Statement stat, int user_id, String device_token) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_devises_id_from_devices_where_users_id_device_token", "66 ");
         // System.out.println("getDeviseIdToUsers ");
         String sql_exe = String.format(sql, user_id, device_token);
@@ -173,7 +182,7 @@ public class SQL {
     }
 
     public static int SQL_insert_into_devices_users_id_device_info_device_token(Statement stat, int user_id, String device_info, String device_token) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_insert_into_devices_users_id_device_info_device_token", "66 ");
         //System.out.println("addDeviseToUsers ");
         String sql_exe = String.format(sql, user_id, device_info, device_token);
@@ -185,7 +194,7 @@ public class SQL {
 
 
     public static String SQL_select_valid_token_from_access_where_users_id_devices_id(Statement stat, int user_id, int devices_id) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_valid_token_from_access_where_users_id_devices_id", "66 ");
         String sql_exe = String.format(sql, user_id, devices_id);
         //System.out.println("getToken id");
@@ -193,8 +202,8 @@ public class SQL {
 
         if (countRow(R) > 0) {
 
-            Date date = new java.util.Date();
-            Date valid_until = R.getTimestamp("valid_until", calendar);
+            Date date = getInstansInGreenwich().getTime();
+            Date valid_until = R.getTimestamp("valid_until", getInstansInGreenwich());
             if (date.getTime() > valid_until.getTime()) {
                 R.close();
                 return null;
@@ -212,11 +221,11 @@ public class SQL {
 
 
     public static int SQL_insert_into_access_users_id_token_created_at_devices_id_valid_until(Statement stat, int user_id, int devices_id) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         // System.out.println("SQL_insert_new_token ");
-        Date created_at = new java.util.Date();
+        Date created_at = getInstansInGreenwich().getTime();
 
-        Calendar instance = Calendar.getInstance();
+        Calendar instance = getInstansInGreenwich();
         instance.setTime(created_at); //устанавливаем дату, с которой будет производить операции
         instance.add(Calendar.DAY_OF_MONTH, 30);// прибавляем 3 дня к установленной дате
         Date valid_until = instance.getTime();
@@ -236,8 +245,8 @@ public class SQL {
     }
 
     public static void SQL_update_into_access(Statement stat, String token) throws SQLException {
-        SQL_set_time_zone(stat);
-        Date created_at = new java.util.Date();
+        //SQL_set_time_zone(stat);
+        Date created_at = getInstansInGreenwich().getTime();
 
 
         String sql = MyProperties.instans().getProperty("SQL_update_into_access", "66 ");
@@ -262,10 +271,10 @@ public class SQL {
 
 
     public static int SQL_insert_into_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at(Statement stat, String title, String name_conversation, int photo_id, String type, int creator_id, Date created_at) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         // System.out.println("SQL_insert_new_token ");
 
-        Calendar instance = Calendar.getInstance();
+        Calendar instance = getInstansInGreenwich();
 
         String sql = MyProperties.instans().getProperty("SQL_insert_into_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at", "66 ");
         String sql_exe = String.format(sql, title, name_conversation, photo_id, type, creator_id, df.format(created_at), df.format(created_at));
@@ -278,9 +287,9 @@ public class SQL {
 
 
     public static int SQL_insert_into_user_contact_user_id_contact_id_first_name_last_name_created_at_updated_at(Statement stat, int user_id, int contact_id, String first_name, String last_name) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         // System.out.println("SQL_insert_new_token ");
-        Date created_at = new java.util.Date();
+        Date created_at = getInstansInGreenwich().getTime();
 
 
         String sql = MyProperties.instans().getProperty("SQL_insert_into_user_contact_user_id_contact_id_first_name_last_name_created_at_updated_at", "66 ");
@@ -294,7 +303,7 @@ public class SQL {
     }
 
     public static Messages SQL_insert_into_messages(Statement stat, Messages messages, Date created_at) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         // System.out.println("SQL_insert_new_token ");
 
 
@@ -318,7 +327,7 @@ public class SQL {
     }
 
     public static int SQL_select_user_id_contact_id_from_user_contact_where_users_id_contact_id(Statement stat, int user_id, int contact_id) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_user_id_contact_id_from_user_contact_where_users_id_contact_id", "66 ");
         // System.out.println("getDeviseIdToUsers ");
         String sql_exe = String.format(sql, user_id, contact_id);
@@ -332,7 +341,7 @@ public class SQL {
 
 
     public static int SQL_select_participant_id_from_participants_where_user_id_conversation_id(Statement stat, int user_id, int conversation_id) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_participant_id_from_participants_where_user_id_conversation_id", "66 ");
         //System.out.println("getDeviseIdToUsers ");
         String sql_exe = String.format(sql, user_id, conversation_id);
@@ -346,7 +355,7 @@ public class SQL {
 
 
     public static int SQL_get_common_conversation_id_single_where_users_id1_and_users_id2(Statement stat, int user_id, int user_id2) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_get_common_conversation_id_single_where_users_id1_and_users_id2", "66 ");
         // System.out.println("getDeviseIdToUsers ");
         String sql_exe = String.format(sql, user_id, user_id2);
@@ -359,14 +368,8 @@ public class SQL {
     }
 
 
-    private static void SQL_set_time_zone(Statement stat) throws SQLException {
-        String sql = MyProperties.instans().getProperty("SQL_set_time_zone", "66 ");
-        stat.execute(sql);
-
-    }
-
     public static ArrayList<User> SQL_get_Array_users_from_users_like(Statement stat, String user_name_like, int afte, int before) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
 
         String sql = MyProperties.instans().getProperty("SQL_get_Array_users_from_users_like", "66 ");
         String sql_exe = String.format(sql, "%" + user_name_like + "%", Integer.toString(afte), Integer.toString(before - afte + 1));
@@ -392,7 +395,7 @@ public class SQL {
 
 
     public static ArrayList<Myin> SQL_select_first_15_participants_and_user_in_each_conversation_where_user_id(Statement stat, int user_id) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
 
         String sql = MyProperties.instans().getProperty("SQL_select_first_15_participants_in_each_conversation_where_user_id", "66 ");
         String sql_exe = String.format(sql, user_id);
@@ -424,7 +427,7 @@ public class SQL {
 
 
     public static User SQL_get_users_from_users_where_id(Statement stat, int user_id) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
 
         String sql = MyProperties.instans().getProperty("SQL_select_all_from_users_where_users_id", "66 ");
         String sql_exe = String.format(sql, user_id);
@@ -449,7 +452,7 @@ public class SQL {
 
 
     public static ArrayList<Myin> SQL_get_Array_сonversation_from_conversation(Statement stat, int user_id) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
 
         String sql = MyProperties.instans().getProperty("SQL_select_ALL_conversation", "66 ");
         String sql_exe = String.format(sql, user_id);
@@ -503,11 +506,11 @@ public class SQL {
 
 
     public static ArrayList<Myin> SQL_get_Array_messages_from_messagess_where_conversation_id_date_limit(Statement stat, int conversation_id, String date, int mess_id, int count) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
 
         String sql = MyProperties.instans().getProperty("SQL_get_Array_messages_from_messagess_where_conversation_id_date_limit", "66 ");
         String sql_exe = String.format(sql, conversation_id, mess_id, date, count);
-       //Log.info(sql_exe);
+        //Log.info(sql_exe);
         ResultSet R = stat.executeQuery(sql_exe);
         ArrayList<Myin> myinArrayList = new ArrayList<>();
 
@@ -533,7 +536,7 @@ public class SQL {
 
 
     public static ArrayList<Participants> SQL_get_Array_participants_from_participants_where_conversation_id(Statement stat, int conversation_id) throws SQLException {
-        SQL_set_time_zone(stat);
+        //SQL_set_time_zone(stat);
 
         String sql = MyProperties.instans().getProperty("SQL_get_Array_participants_from_participants_where_conversation_id", "66 ");
         String sql_exe = String.format(sql, conversation_id);
@@ -555,7 +558,7 @@ public class SQL {
 
 
     public static ArrayList<User_token> SQL_get_Array_users_id_token_device_token(Statement stat, int conversation_id) throws SQLException {
-        SQL_set_time_zone(stat);
+       //SQL_set_time_zone(stat);
 
         String sql = MyProperties.instans().getProperty("SQL_get_Array_users_id_token_device_token", "66 ");
         String sql_exe = String.format(sql, conversation_id);
@@ -566,7 +569,7 @@ public class SQL {
             User_token user_token = new User_token();
             user_token.users_id = R.getInt("users_id");
             user_token.token = R.getString("token");
-            user_token.device_token= R.getString("device_token");
+            user_token.device_token = R.getString("device_token");
             myinArrayList.add(user_token);
         }
         R.close();
@@ -577,7 +580,7 @@ public class SQL {
 
 
     private static int SQL_select_LAST_INSERT_ID(Statement stat) throws SQLException {
-        SQL_set_time_zone(stat);
+       // SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_LAST_INSERT_ID", "66 ");
 
         ResultSet R = stat.executeQuery(sql);

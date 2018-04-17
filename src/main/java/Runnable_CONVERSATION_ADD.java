@@ -54,7 +54,7 @@ public class Runnable_CONVERSATION_ADD implements Runnable {
                     //проверка наличие беседы между двумя пользователями
                     int conv_id = SQL.SQL_get_common_conversation_id_single_where_users_id1_and_users_id2(stat, user_id, Integer.parseInt(user_id2));
 
-                    Date created_at = new java.util.Date();
+                    Date created_at = SQL.getInstansInGreenwich().getTime();
 
                     if (conv_id == -1) {
                         conv_id = SQL.SQL_insert_into_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at(stat, title, name_conversation, 0, type, user_id, created_at);
