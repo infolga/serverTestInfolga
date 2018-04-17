@@ -36,14 +36,13 @@ public class Runnable_USER_SING_OUT implements Runnable {
             int user_id = SQL.SQL_select_users_id_from_access_where_token(stat, token);
 
             if (user_id != -1) {// токен найден и рабочий
-                SQL.SQL_update_into_access(stat,token);
+                SQL.SQL_update_into_access(stat, token);
 
             } else {//пользователь не найден
 
 
             }
             con.commit();
-
 
 
         } catch (SQLException e) {
