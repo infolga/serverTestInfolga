@@ -1,6 +1,5 @@
 
 
-
 public abstract class MSG {
 
 
@@ -42,6 +41,7 @@ public abstract class MSG {
 
     public static final int XML_CONVERSATION_ADD = 24;//id actions
     public static final int XML_CONVERSATION_SINGLE_CREATE = 25;
+
     public static final int GET_ALL_CONVERSATION = 26;
     public static final int XML_GET_ALL_CONVERSATION = 27;//id actions
 
@@ -64,8 +64,14 @@ public abstract class MSG {
 
     public static final int UPDATE_RECYCLER_VIEV_ADD_USERS = 37;
     public static final int SING_OUT = 38;
-    public static final int XML_SING_OUT = 39;
+    public static final int XML_SING_OUT = 39;//id actions
 
+    public static final int FIREBASE_MESSAGING = 40;
+
+
+    public static final int XML_CONVERSATION_GROUP_CREATE = 41;
+    public static final int CONVERSATION_ADD_USERS = 42;
+    public static final int XML_CONVERSATION_ADD_USERS = 43;//id actions
 
     public static final int XML_RESULT_VALUES_OK = 0;
     public static final int XML_RESULT_VALUES_INCORRECT_PASSWORD = 100;

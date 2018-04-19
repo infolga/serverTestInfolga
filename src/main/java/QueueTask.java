@@ -124,7 +124,10 @@ public class QueueTask {
                                     Log.info("PACKEGE_MSG", "Runnable_USER_SING_OUT");
                                     service.submit(new Runnable_USER_SING_OUT(myXMLParser, msg.ctx, DB, QT));
                                     break;
-
+                                case MSG.XML_CONVERSATION_ADD_USERS :
+                                    Log.info("PACKEGE_MSG", "Runnable_CONVERSATION_ADD_USERS");
+                                    service.submit(new Runnable_CONVERSATION_ADD_USERS(myXMLParser, msg.ctx, DB, QT));
+                                    break;
 
                                 default:
 
@@ -142,6 +145,11 @@ public class QueueTask {
                         if (msg.str instanceof Messages){
                             Log.info("SYSTEM_MSG", "Runnable_SEND_MESSAGES_NOTIFICATION");
                             service.submit(new Runnable_SEND_MESSAGES_NOTIFICATION((Messages) msg.str,conectList, DB  ));
+
+                        }
+                        else if (msg.str instanceof Conversation){
+                            Log.info("SYSTEM_MSG", "Runnable_SEND_CONVERSATION_NOTIFICATION");
+                            service.submit(new Runnable_SEND_CONVERSATION_NOTIFICATION((Conversation) msg.str, msg.arg1, conectList, DB  ));
 
                         }
 

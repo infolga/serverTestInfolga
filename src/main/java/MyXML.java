@@ -74,7 +74,10 @@ public class MyXML {
                 buf.setAttribute("id", "" + MSG.XML_GET_MESSAGES_FO_DATE);
                 buf.addContent(new Comment("message.get"));
                 break;
-
+            case MSG.XML_CONVERSATION_ADD_USERS:
+                buf.setAttribute("id", "" + MSG.XML_CONVERSATION_ADD_USERS);
+                buf.addContent(new Comment("conversation.addUser"));
+                break;
             default:
                 buf.setAttribute("id", "" + Actionid);
                 break;
@@ -156,7 +159,10 @@ public class MyXML {
         buf.setName(name);
         return this;
     }
-
+    public MyXML setRootName(String name) {
+        root.setName(name);
+        return this;
+    }
     public MyXML setAttribute(String name, String value) {
         buf.setAttribute(name, value);
         return this;

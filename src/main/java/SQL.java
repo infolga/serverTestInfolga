@@ -140,6 +140,8 @@ public class SQL {
         //SQL_set_time_zone(stat);
         String sql = MyProperties.instans().getProperty("SQL_select_conversation_all_from_conversation_where_conversation_id_users_id", "66 ");
         String sql_exe = String.format(sql, conversation_id, user_id);
+
+        System.out.println(sql_exe);
         ResultSet R = stat.executeQuery(sql_exe);
         Conversation conversation = new Conversation();
 
@@ -272,14 +274,14 @@ public class SQL {
 
     public static int SQL_insert_into_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at(Statement stat, String title, String name_conversation, int photo_id, String type, int creator_id, Date created_at) throws SQLException {
         //SQL_set_time_zone(stat);
-        // System.out.println("SQL_insert_new_token ");
+        //System.out.println("SQL_insert_new_token ");
 
         Calendar instance = getInstansInGreenwich();
 
         String sql = MyProperties.instans().getProperty("SQL_insert_into_conversation_title_name_conversation_photo_id_type_creator_id_created_at_updated_at", "66 ");
         String sql_exe = String.format(sql, title, name_conversation, photo_id, type, creator_id, df.format(created_at), df.format(created_at));
 
-        //System.out.println(sql_exe);
+        System.out.println(sql_exe);
         stat.executeUpdate(sql_exe);
         return SQL_select_LAST_INSERT_ID(stat);
 
@@ -316,9 +318,12 @@ public class SQL {
         messages.setCreated_at(df.format(created_at));
 
         String sql = MyProperties.instans().getProperty("SQL_insert_into_messages", "66 ");
+
         String sql_exe = String.format(sql, conversation_id, sender_id, message_type, message, attachment_thumb_url, attachment_url, df.format(created_at));
 
-        //System.out.println(sql_exe);
+        stat.executeUpdate("SET NAMES utf8mb4;") ;
+
+        System.out.println(sql_exe);
         stat.executeUpdate(sql_exe);
         messages.setId(SQL_select_LAST_INSERT_ID(stat));
         return messages;
@@ -557,10 +562,10 @@ public class SQL {
     }
 
 
-    public static ArrayList<User_token> SQL_get_Array_users_id_token_device_token(Statement stat, int conversation_id) throws SQLException {
+    public static ArrayList<User_token> SQL_get_Array_users_id_token_device_token_in_conversation(Statement stat, int conversation_id) throws SQLException {
        //SQL_set_time_zone(stat);
 
-        String sql = MyProperties.instans().getProperty("SQL_get_Array_users_id_token_device_token", "66 ");
+        String sql = MyProperties.instans().getProperty("SQL_get_Array_users_id_token_device_token_where_conversation_id", "66 ");
         String sql_exe = String.format(sql, conversation_id);
         //Log.info(sql_exe);
         ResultSet R = stat.executeQuery(sql_exe);
@@ -577,6 +582,27 @@ public class SQL {
 
 
     }
+
+    public static ArrayList<User_token> SQL_get_Array_users_id_token_device_token_where_user_id(Statement stat, int user_id) throws SQLException {
+        //SQL_set_time_zone(stat);
+
+        String sql = MyProperties.instans().getProperty("SQL_get_Array_users_id_token_device_token_where_user_id", "66 ");
+        String sql_exe = String.format(sql, user_id);
+        //Log.info(sql_exe);
+        ResultSet R = stat.executeQuery(sql_exe);
+        ArrayList<User_token> myinArrayList = new ArrayList<>();
+        while (R.next()) {
+            User_token user_token = new User_token();
+            user_token.users_id = R.getInt("users_id");
+            user_token.token = R.getString("token");
+            user_token.device_token = R.getString("device_token");
+            myinArrayList.add(user_token);
+        }
+        R.close();
+        return myinArrayList;
+
+    }
+
 
 
     private static int SQL_select_LAST_INSERT_ID(Statement stat) throws SQLException {

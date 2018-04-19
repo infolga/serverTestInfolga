@@ -35,7 +35,7 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
 
             int conversation_id = messages.getConversation_id();
 
-            ArrayList<User_token> list = SQL.SQL_get_Array_users_id_token_device_token(stat, conversation_id);
+            ArrayList<User_token> list = SQL.SQL_get_Array_users_id_token_device_token_in_conversation(stat, conversation_id);
             MyXML myXML = new MyXML(MSG.XML_TYPE_RESPONSE, MSG.XML_ADD_MESSAGES);
             myXML.setAttributeRoot(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
             myXML.jumpToChildFromRoot(MSG.XML_ELEMENT_ACTIONS);
@@ -81,7 +81,7 @@ public class Runnable_SEND_MESSAGES_NOTIFICATION implements Runnable {
                 .setNotification(new Notification(user.getFirst_name() + " " + user.getLast_name(), messages.getMessage()))
                 //.setNotification( new Notification("тест ", "ХА ХА?"));
             ;
-
+            builder.putData("type2", "messages");
             for (int i = 0; i < list.size(); i++) {
 
                 ChannelHandlerContext channelHandlerContext = conectList.get(list.get(i).token);

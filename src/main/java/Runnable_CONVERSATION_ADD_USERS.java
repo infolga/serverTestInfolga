@@ -4,19 +4,20 @@ import org.mortbay.log.Log;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Date;
+import java.util.ArrayList;
 
-public class Runnable_ADD_MESSAGES implements Runnable {
+public class Runnable_CONVERSATION_ADD_USERS implements Runnable {
 
     private MyXML myXML;
     private ChannelHandlerContext ctx;
     private PoolingDB db;
     private Connection con;
     private Statement stat;
+
     private QueueTask QT;
 
 
-    public Runnable_ADD_MESSAGES(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db, QueueTask Q) throws SQLException {
+    public Runnable_CONVERSATION_ADD_USERS(MyXML myXML, ChannelHandlerContext ctx, PoolingDB db, QueueTask Q) throws SQLException {
         this.myXML = myXML;
         this.ctx = ctx;
         this.db = db;
@@ -28,49 +29,49 @@ public class Runnable_ADD_MESSAGES implements Runnable {
     public void run() {
         try {
 
-            Log.info("Runnable_ADD_MESSAGES");
+            Log.info("Runnable_CONVERSATION_ADD_USERS");
             Log.info(myXML.toString());
             con.setAutoCommit(false);
             stat = con.createStatement();
 
             String token = myXML.getValueInActionsXML(MSG.XML_ELEMENT_TOKEN);
-
-            Messages messages = new Messages(myXML.getCildElement(MSG.XML_ELEMENT_MESSAGES));
-
-
             int user_id = SQL.SQL_select_users_id_from_access_where_token(stat, token);
 
+
             if (user_id != -1) {// токен найден и рабочий
+                int conv_id = Integer.parseInt(myXML.getValueInActionsXML(MSG.XML_ELEMENT_CONVERSATION_ID));
+                int user_id2 = Integer.parseInt(myXML.getValueInActionsXML(MSG.XML_ELEMENT_USERS_ID));
 
+                Conversation conversation = SQL.SQL_select_conversation_all_from_conversation_where_conversation_id_users_id(stat, conv_id, user_id);
 
-                int participant_id = SQL.SQL_select_participant_id_from_participants_where_user_id_conversation_id(stat, user_id, messages.getConversation_id());
-                if (participant_id != -1) {// пользоветель состоит в этой беседе
-
-                    Date created_at = SQL.getInstansInGreenwich().getTime();
-
-                    messages.setSender_id(user_id);
-                    messages = SQL.SQL_insert_into_messages(stat, messages, created_at);
-
-
-                    QT.addTask(new MyTask(messages,null,MyTask.SYSTEM_MSG));
+                if (conversation.getType().equals("group")) {
+                    SQL.SQL_insert_into_participants_conversation_id_users_id(stat, conv_id, user_id2);
 
                     myXML.setNameRoot(MSG.XML_TYPE_RESPONSE);
                     myXML.setAttributeRoot(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
                     myXML.jumpToChildFromRoot(MSG.XML_ELEMENT_ACTIONS);
                     myXML.setAtribute(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_OK));
-                    myXML.removeChild(MSG.XML_ELEMENT_MESSAGES);
+                    myXML.addChildElement(conversation.getXMLElement());
 
-                    myXML.addChildElement(messages.getXMLElement());
+                    ArrayList<Participants> myins = SQL.SQL_get_Array_participants_from_participants_where_conversation_id(stat, conv_id);
+                    for (int i = 0; i < myins.size(); i++) {
+                        myXML.addChildElement(myins.get(i).getXMLElement());
+                    }
+
+                    MyTask task =new MyTask(conversation,null,MyTask.SYSTEM_MSG);
+                    task.arg1 = user_id2;
+                    QT.addTask(task);
 
 
-                } else {
+                }else {
 
                     myXML.setNameRoot(MSG.XML_TYPE_RESPONSE);
                     myXML.setAttributeRoot(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_INSUFFICIENT_ACCESS_RIGHTS));
                     myXML.jumpToChildFromRoot(MSG.XML_ELEMENT_ACTIONS);
                     myXML.setAtribute(MSG.XML_ATRIBUT_RESULT, Integer.toString(MSG.XML_RESULT_VALUES_INSUFFICIENT_ACCESS_RIGHTS));
-
                 }
+
+
 
             } else {// токен недействительный
                 myXML.setNameRoot(MSG.XML_TYPE_RESPONSE);
@@ -81,9 +82,7 @@ public class Runnable_ADD_MESSAGES implements Runnable {
 
 
             con.commit();
-
-            //System.out.println(myXML.toString());
-
+            Log.info(myXML.toString());
             ctx.write(myXML.toString());
             ctx.flush();
         } catch (SQLException e) {
